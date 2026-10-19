@@ -112,7 +112,8 @@ PROJECTS = {
             "are framed strictly as experimental research signals rather than financial advice. This constraint validates the core system objective: "
             "achieving robust, multi-model consensus and low-latency API aggregation at zero cloud compute cost."
         ),
-        "live_url": "https://market-oracle.fly.dev",
+        "live_url": "https://prophet-zpmp.onrender.com/",
+        "live_label": "Live Web App ↗",
         "github_url": "https://github.com/DDee3/Prophet",
     },
     "spray-log": {
