@@ -15,6 +15,12 @@ PROFILE = {
         "On the frontend, I am comfortable building clean interfaces with HTML, Tailwind CSS, and JavaScript, and I am actively learning Next.js to round out my full-stack toolkit.",
         "I care about shipping software that stays fast, keeps user data isolated, and solves concrete problems without unnecessary complexity.",
     ],
+    "languages": [
+        {"name": "Burmese", "proficiency": "Native / Bilingual Proficiency"},
+        {"name": "English", "proficiency": "Full Professional Proficiency"},
+        {"name": "Chinese", "proficiency": "Professional Working Proficiency"},
+        {"name": "Japanese", "proficiency": "JLPT N3 Certified (N2 Level)"},
+    ],
 }
 
 PROJECTS = {

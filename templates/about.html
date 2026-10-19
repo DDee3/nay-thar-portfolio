@@ -32,6 +32,19 @@
     </div>
   </div>
 
+  <!-- Languages -->
+  <div class="mt-10 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+    <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500">Languages</h2>
+    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {% for lang in profile.languages %}
+      <div class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40">
+        <span class="text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">{{ lang.name }}</span>
+        <p class="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">{{ lang.proficiency }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
   <!-- Single Clear CTA -->
   <div class="mt-12">
     <a href="{{ url_for('portfolio.projects') }}"
