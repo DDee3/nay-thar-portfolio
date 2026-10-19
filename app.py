@@ -6,7 +6,7 @@ PROFILE = {
     "education": "Bachelor of Information Technology (James Cook University Singapore)",
     "pitch": "I build Python backends, multi-model AI pipelines, and practical web tools that solve real operational problems.",
     "email": "naythar3111@gmail.com",
-    "github": "https://github.com/NayTharHtet",
+    "github": "https://github.com/DDee3",
     "linkedin": "https://www.linkedin.com/in/nay-thar-htet-73b5702ba/",
     "site_url": "https://naytharhtet-portfolio.fly.dev",
     "about_sentences": [
