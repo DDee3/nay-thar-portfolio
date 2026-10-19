@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section aria-labelledby="about-page-heading" class="max-w-2xl">
+  <h1 id="about-page-heading" class="text-2xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+    About {{ profile.name }}
+  </h1>
+  <p class="mt-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">
+    {{ profile.education }}
+  </p>
+
+  <!-- 4 sentences max, honest about Next.js -->
+  <div class="mt-8 space-y-4 text-base sm:text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed">
+    {% for sentence in profile.about_sentences %}
+    <p>{{ sentence }}</p>
+    {% endfor %}
+  </div>
+
+  <!-- Technical Snapshot -->
+  <div class="mt-10 pt-8 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+    <div>
+      <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500">Backend &amp; AI</h2>
+      <p class="mt-2 text-zinc-800 dark:text-zinc-200">
+        Python, Flask, REST APIs, Groq API, Local Qwen via Ollama, llama-cpp-python, multi-model routing
+      </p>
+    </div>
+    <div>
+      <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500">Frontend &amp; Data</h2>
+      <p class="mt-2 text-zinc-800 dark:text-zinc-200">
+        HTML5, Tailwind CSS, JavaScript, Chart.js, PostgreSQL / Supabase, Next.js (in progress)
+      </p>
+    </div>
+  </div>
+
+  <!-- Single Clear CTA -->
+  <div class="mt-12">
+    <a href="{{ url_for('portfolio.projects') }}"
+       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors">
+      See What I Have Built →
+    </a>
+  </div>
+</section>
+{% endblock %}

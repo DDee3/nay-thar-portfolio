@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- 1. HERO SECTION -->
+<section aria-labelledby="hero-heading" class="pb-16 sm:pb-24 border-b border-zinc-200/80 dark:border-zinc-800/80">
+  <div class="inline-flex items-center justify-center px-3.5 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-xs font-mono text-zinc-600 dark:text-zinc-400 mb-6">
+    Available for Python, Backend &amp; AI Engineering roles
+  </div>
+
+  <h1 id="hero-heading" class="text-3xl sm:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
+    {{ profile.name }}
+  </h1>
+  <p class="mt-2 text-lg sm:text-xl font-medium text-emerald-600 dark:text-emerald-400">
+    {{ profile.role }}
+  </p>
+  <p class="mt-5 max-w-2xl text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+    {{ profile.pitch }}
+  </p>
+
+  <!-- Tech Stack Pills -->
+  <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-zinc-600 dark:text-zinc-400">
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Python</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Flask</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">REST APIs</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Groq API</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Local Qwen (Ollama)</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">HTML / Tailwind / JS</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Next.js (Learning)</span>
+  </div>
+
+  <!-- Two Hero CTAs -->
+  <div class="mt-8 flex flex-wrap items-center gap-3.5">
+    <a href="#projects"
+       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors">
+      View Projects
+    </a>
+    <a href="mailto:{{ profile.email }}"
+       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium border border-zinc-300 dark:border-zinc-800 bg-transparent text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
+      Email Me
+    </a>
+  </div>
+</section>
+
+<!-- 2. PROJECTS SECTION -->
+<section id="projects" aria-labelledby="projects-heading" class="py-16 sm:py-20 border-b border-zinc-200/80 dark:border-zinc-800/80">
+  <div class="flex items-baseline justify-between mb-8">
+    <div>
+      <h2 id="projects-heading" class="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        Selected Projects
+      </h2>
+      <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        Production web apps and multi-model AI tools. Click any project for architecture and stack details.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    {% for project in projects %}
+    <article class="group rounded-xl border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/40 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all flex flex-col overflow-hidden">
+      <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}" class="block overflow-hidden border-b border-zinc-200/70 dark:border-zinc-800/80 bg-zinc-100 dark:bg-zinc-950">
+        <img src="{{ project.image }}"
+             alt="{{ project.image_alt }}"
+             loading="lazy"
+             decoding="async"
+             width="640"
+             height="360"
+             class="w-full h-40 object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+      </a>
+      <div class="p-5 flex-1 flex flex-col justify-between">
+        <div>
+          <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+            {{ project.type }}
+          </span>
+          <h3 class="mt-1.5 text-base font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+            <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}">
+              {{ project.title }}
+            </a>
+          </h3>
+          <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            {{ project.Tagline }}
+          </p>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-zinc-100 dark:border-zinc-800/70 flex items-center justify-between text-xs font-medium">
+          <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}"
+             class="inline-flex items-center gap-1 text-zinc-900 dark:text-zinc-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+            Read case study
+            <span aria-hidden="true" class="group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- 3. ABOUT SECTION (4 sentences max, honest about learning Next.js) -->
+<section id="about" aria-labelledby="about-heading" class="py-16 sm:py-20 border-b border-zinc-200/80 dark:border-zinc-800/80">
+  <h2 id="about-heading" class="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+    About
+  </h2>
+  <div class="mt-4 max-w-2xl space-y-3 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+    {% for sentence in profile.about_sentences %}
+    <p>{{ sentence }}</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- 4. CONTACT SECTION (Email, GitHub, LinkedIn only) -->
+<section id="contact" aria-labelledby="contact-heading" class="pt-16 sm:pt-20">
+  <h2 id="contact-heading" class="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+    Contact
+  </h2>
+  <p class="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
+    Reach out directly by email or check my code and profile below.
+  </p>
+
+  <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <a href="mailto:{{ profile.email }}"
+       class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors">
+      <span class="block text-xs font-mono uppercase text-zinc-500">Email</span>
+      <span class="mt-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{{ profile.email }}</span>
+    </a>
+    <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer"
+       class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors">
+      <span class="block text-xs font-mono uppercase text-zinc-500">GitHub</span>
+      <span class="mt-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100">github.com/NayTharHtet</span>
+    </a>
+    <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer"
+       class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors">
+      <span class="block text-xs font-mono uppercase text-zinc-500">LinkedIn</span>
+      <span class="mt-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100">in/nay-thar-htet-73b5702ba</span>
+    </a>
+  </div>
+</section>
+{% endblock %}

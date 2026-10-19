@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section aria-labelledby="contact-page-heading" class="max-w-2xl">
+  <h1 id="contact-page-heading" class="text-2xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+    Contact
+  </h1>
+  <p class="mt-3 text-base text-zinc-600 dark:text-zinc-400">
+    Looking for a Python backend or AI integration developer? Send me an email directly.
+  </p>
+
+  <!-- Single Primary CTA -->
+  <div class="mt-8">
+    <a href="mailto:{{ profile.email }}"
+       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-emerald-500 text-zinc-950 hover:bg-emerald-400 transition-colors">
+      Email {{ profile.email }}
+    </a>
+  </div>
+
+  <!-- Email, GitHub, LinkedIn Only -->
+  <div class="mt-10 space-y-3 border-t border-zinc-200 dark:border-zinc-800 pt-8">
+    <div class="flex items-center justify-between py-3 border-b border-zinc-200/60 dark:border-zinc-800/60">
+      <span class="text-xs font-mono uppercase text-zinc-500">Email</span>
+      <a href="mailto:{{ profile.email }}" class="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-emerald-500 transition-colors">
+        {{ profile.email }}
+      </a>
+    </div>
+    <div class="flex items-center justify-between py-3 border-b border-zinc-200/60 dark:border-zinc-800/60">
+      <span class="text-xs font-mono uppercase text-zinc-500">GitHub</span>
+      <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-emerald-500 transition-colors">
+        github.com/NayTharHtet ↗
+      </a>
+    </div>
+    <div class="flex items-center justify-between py-3 border-b border-zinc-200/60 dark:border-zinc-800/60">
+      <span class="text-xs font-mono uppercase text-zinc-500">LinkedIn</span>
+      <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-emerald-500 transition-colors">
+        linkedin.com/in/nay-thar-htet-73b5702ba ↗
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article aria-labelledby="project-title" class="max-w-3xl">
+  <a href="{{ url_for('portfolio.projects') }}"
+     class="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors mb-6">
+    ← Back to Projects
+  </a>
+
+  <header>
+    <span class="text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+      {{ project.type }}
+    </span>
+    <h1 id="project-title" class="mt-1.5 text-2xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      {{ project.title }}
+    </h1>
+    <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
+      {{ project.Tagline }}
+    </p>
+  </header>
+
+  {% if project.images %}
+  <div class="mt-8 space-y-6">
+    {% for img in project.images %}
+    <figure class="rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 shadow-sm">
+      <img src="{{ img.url if img.url is defined else img }}"
+           alt="{{ img.alt if img.alt is defined else project.title }}"
+           loading="lazy"
+           width="1200"
+           height="630"
+           class="w-full h-auto object-cover" />
+      {% if img.caption is defined %}
+      <figcaption class="px-4 py-2.5 text-xs font-mono text-zinc-500 dark:text-zinc-400 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60">
+        {{ img.caption }}
+      </figcaption>
+      {% endif %}
+    </figure>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="mt-8 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950 shadow-sm">
+    <img src="{{ project.image }}"
+         alt="{{ project.image_alt }}"
+         width="800"
+         height="450"
+         class="w-full h-auto object-cover" />
+  </div>
+  {% endif %}
+
+  <!-- Strict 5-Part Project Detail Format -->
+  <div class="mt-10 space-y-8">
+    <section aria-labelledby="section-problem" class="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/30">
+      <h2 id="section-problem" class="text-xs font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        {{ project.problem_heading | default('Problem') }}
+      </h2>
+      <p class="mt-2 text-base text-zinc-800 dark:text-zinc-200 leading-relaxed whitespace-pre-line">
+        {{ project.problem }}
+      </p>
+    </section>
+
+    <section aria-labelledby="section-built" class="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/30">
+      <h2 id="section-built" class="text-xs font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        {{ project.built_heading | default('What I Built') }}
+      </h2>
+      <p class="mt-2 text-base text-zinc-800 dark:text-zinc-200 leading-relaxed whitespace-pre-line">
+        {{ project.what_i_built }}
+      </p>
+    </section>
+
+    <section aria-labelledby="section-stack" class="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/30">
+      <h2 id="section-stack" class="text-xs font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        Stack
+      </h2>
+      <p class="mt-2 text-sm sm:text-base font-mono text-emerald-700 dark:text-emerald-400">
+        {{ project.stack }}
+      </p>
+    </section>
+
+    <section aria-labelledby="section-learned" class="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/30">
+      <h2 id="section-learned" class="text-xs font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        {{ project.learned_heading | default('What I Learned') }}
+      </h2>
+      <p class="mt-2 text-base text-zinc-800 dark:text-zinc-200 leading-relaxed whitespace-pre-line">
+        {{ project.what_i_learned }}
+      </p>
+    </section>
+
+    <section aria-labelledby="section-links" class="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/30">
+      <h2 id="section-links" class="text-xs font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+        Links
+      </h2>
+      <div class="mt-3 flex flex-wrap items-center gap-4 text-sm font-medium">
+        {% if project.live_url %}
+        <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors">
+          {{ project.live_label | default('Live Web App ↗') }}
+        </a>
+        {% endif %}
+        {% if project.github_url %}
+        <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+          GitHub Repository ↗
+        </a>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+</article>
+{% endblock %}

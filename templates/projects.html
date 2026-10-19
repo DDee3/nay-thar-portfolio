@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section aria-labelledby="all-projects-heading">
+  <header class="max-w-2xl">
+    <h1 id="all-projects-heading" class="text-2xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      Projects
+    </h1>
+    <p class="mt-3 text-base text-zinc-600 dark:text-zinc-400">
+      Three systems I built across SaaS data isolation, multi-model stock analysis, and local LLM inference.
+    </p>
+  </header>
+
+  <div class="mt-10 space-y-6">
+    {% for project in projects %}
+    <article class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors overflow-hidden grid grid-cols-1 md:grid-cols-12">
+      <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}" class="md:col-span-5 bg-zinc-100 dark:bg-zinc-950 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+        <img src="{{ project.image }}"
+             alt="{{ project.image_alt }}"
+             loading="lazy"
+             decoding="async"
+             width="640"
+             height="360"
+             class="w-full h-48 md:h-full object-cover" />
+      </a>
+      <div class="p-6 md:col-span-7 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+            {{ project.type }}
+          </span>
+          <h2 class="mt-1 text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              {{ project.title }}
+            </a>
+          </h2>
+          <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            {{ project.Tagline }}
+          </p>
+          <p class="mt-3 text-xs font-mono text-zinc-500 dark:text-zinc-400">
+            Stack: {{ project.stack }}
+          </p>
+        </div>
+
+        <div class="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800/70">
+          <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}"
+             class="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:underline">
+            View project breakdown →
+          </a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <!-- Single Clear Page CTA -->
+  <div class="mt-14 pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <p class="text-sm text-zinc-600 dark:text-zinc-400">
+      Want to walk through the code or discuss a role?
+    </p>
+    <a href="mailto:{{ profile.email }}"
+       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors">
+      Email Me
+    </a>
+  </div>
+</section>
+{% endblock %}
