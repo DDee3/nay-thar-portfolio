@@ -1,92 +1,215 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- 1. HERO SECTION -->
-<section aria-labelledby="hero-heading" class="pb-16 sm:pb-24 border-b border-zinc-200/80 dark:border-zinc-800/80">
-  <div class="inline-flex items-center justify-center px-3.5 py-1 rounded-full border border-zinc-200 dark:border-zinc-800 bg-zinc-100/80 dark:bg-zinc-900/80 text-xs font-mono text-zinc-600 dark:text-zinc-400 mb-6">
-    Available for Python, Backend &amp; AI Engineering roles
+<!-- ==========================================================================
+     1. HERO SECTION — 3D WIREFRAME CONSTRUCT + STAGGERED TEXT REVEAL
+     ========================================================================== -->
+<section aria-labelledby="hero-heading" class="relative min-h-[82vh] flex flex-col justify-between pb-20 sm:pb-28 border-b border-white/10 overflow-hidden">
+  <!-- 3D Floating Geometric Wireframe Background Canvas (LaunchKit Inspired) -->
+  <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+    <canvas id="hero-3d-canvas" class="w-full h-full opacity-90"></canvas>
+    <!-- Subtle single-hue orange ambient core glow (no generic multi-stop gradients) -->
+    <div class="absolute top-1/3 right-[12%] w-80 h-80 rounded-full bg-[#FF5A00]/[0.07] blur-[110px]"></div>
   </div>
 
-  <h1 id="hero-heading" class="text-3xl sm:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight">
-    {{ profile.name }}
-  </h1>
-  <p class="mt-2 text-lg sm:text-xl font-medium text-emerald-600 dark:text-emerald-400">
-    {{ profile.role }}
-  </p>
-  <p class="mt-5 max-w-2xl text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-    {{ profile.pitch }}
-  </p>
+  <!-- Top Telemetry Bar -->
+  <div class="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-white/10" data-hero-reveal>
+    <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 glass-panel">
+      <span class="w-2 h-2 rounded-full bg-[#FF5A00] animate-ping"></span>
+      <span class="w-2 h-2 rounded-full bg-[#FF5A00] -ml-4"></span>
+      <span class="font-mono text-xs uppercase tracking-[0.12em] text-zinc-200">
+        Available for Python, Backend &amp; AI Engineering roles
+      </span>
+    </div>
 
-  <!-- Tech Stack Pills -->
-  <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-zinc-600 dark:text-zinc-400">
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Python</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Flask</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">REST APIs</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Groq API</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Local Qwen (Ollama)</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">HTML / Tailwind / JS</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Next.js 14 / TypeScript / Stripe</span>
-  </div>
-
-  <!-- Two Hero CTAs -->
-  <div class="mt-8 flex flex-wrap items-center gap-3.5">
-    <a href="#projects"
-       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors">
-      View Projects
-    </a>
-    <a href="mailto:{{ profile.email }}"
-       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium border border-zinc-300 dark:border-zinc-800 bg-transparent text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
-      Email Me
-    </a>
-  </div>
-</section>
-
-<!-- 2. PROJECTS SECTION -->
-<section id="projects" aria-labelledby="projects-heading" class="py-16 sm:py-20 border-b border-zinc-200/80 dark:border-zinc-800/80">
-  <div class="flex items-baseline justify-between mb-8">
-    <div>
-      <h2 id="projects-heading" class="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-        Selected Projects
-      </h2>
-      <p class="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        Production web apps and multi-model AI tools. Click any project for architecture and stack details.
-      </p>
+    <div class="hidden sm:flex items-center gap-4 font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
+      <span>MESH // <strong class="text-white">GEODESIC.3D</strong></span>
+      <span class="text-white/20">|</span>
+      <span id="telemetry-coords" class="text-[#FF5A00]">VEC[0.0°, 0.0°]</span>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {% for project in projects %}
-    <article class="group rounded-xl border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/40 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all flex flex-col overflow-hidden">
-      <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}" class="block overflow-hidden border-b border-zinc-200/70 dark:border-zinc-800/80 bg-zinc-100 dark:bg-zinc-950">
-        <img src="{{ project.image }}"
-             alt="{{ project.image_alt }}"
-             loading="lazy"
-             decoding="async"
-             width="640"
-             height="360"
-             class="w-full h-40 object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+  <!-- Main Hero Typography & Staggered Reveal -->
+  <div class="relative z-10 my-auto py-12 sm:py-16 max-w-4xl">
+    <div class="font-mono text-xs sm:text-sm uppercase tracking-[0.22em] text-[#FF5A00] font-semibold mb-4 flex items-center gap-3" data-hero-reveal>
+      <span class="w-8 h-[1px] bg-[#FF5A00]"></span>
+      <span>{{ profile.role }}</span>
+    </div>
+
+    <h1 id="hero-heading" class="text-5xl sm:text-7xl lg:text-[5.5rem] font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
+      <span class="reveal-mask"><span class="reveal-word" data-hero-reveal>NAY</span></span>
+      <span class="reveal-mask"><span class="reveal-word" data-hero-reveal>THAR</span></span>
+      <span class="reveal-mask"><span class="reveal-word text-[#FF5A00]" data-hero-reveal>HTET.</span></span>
+    </h1>
+
+    <p class="mt-6 max-w-2xl text-base sm:text-xl text-zinc-300 leading-relaxed font-normal" data-hero-reveal>
+      {{ profile.pitch }}
+    </p>
+
+    <!-- Technical Monospace Stack Matrix Pills -->
+    <div class="mt-8 flex flex-wrap gap-2 text-xs font-mono uppercase tracking-[0.06em]" data-hero-reveal>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">Python</span>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">Flask</span>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">REST APIs</span>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">Groq API</span>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">Local Qwen (Ollama)</span>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">HTML / Tailwind / JS</span>
+      <span class="px-3 py-1.5 glass-panel text-zinc-200 hover:border-[#FF5A00] hover:text-white transition-colors">Next.js 14 / TypeScript / Stripe</span>
+    </div>
+
+    <!-- Snappy Hero CTAs -->
+    <div class="mt-10 flex flex-wrap items-center gap-4" data-hero-reveal>
+      <a href="#projects"
+         data-magnetic
+         class="px-7 py-3.5 text-xs sm:text-sm btn-orange">
+        <span>View Projects</span>
+        <span aria-hidden="true" class="arrow-icon">↘</span>
       </a>
-      <div class="p-5 flex-1 flex flex-col justify-between">
-        <div>
-          <span class="text-[11px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-            {{ project.type }}
+      <a href="mailto:{{ profile.email }}"
+         data-magnetic
+         class="px-7 py-3.5 text-xs sm:text-sm btn-glass">
+        <span>Email Me</span>
+        <span aria-hidden="true" class="arrow-icon">↗</span>
+      </a>
+      <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer"
+         data-magnetic
+         class="px-5 py-3.5 text-xs sm:text-sm btn-glass">
+        <span>GitHub</span>
+        <span aria-hidden="true" class="arrow-icon">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Architectural Telemetry Matrix -->
+  <div class="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border border-white/10" data-hero-reveal>
+    <div class="bg-[#000000]/90 p-4 sm:p-5">
+      <span class="block font-mono text-xs uppercase tracking-[0.12em] text-zinc-500">01 // ARCHITECTURE</span>
+      <span class="mt-1 block font-mono text-sm font-bold text-white uppercase">Python &amp; Multi-LLM</span>
+    </div>
+    <div class="bg-[#000000]/90 p-4 sm:p-5">
+      <span class="block font-mono text-xs uppercase tracking-[0.12em] text-zinc-500">02 // FRONTEND</span>
+      <span class="mt-1 block font-mono text-sm font-bold text-white uppercase">Next.js 14 &amp; Strict TS</span>
+    </div>
+    <div class="bg-[#000000]/90 p-4 sm:p-5">
+      <span class="block font-mono text-xs uppercase tracking-[0.12em] text-zinc-500">03 // DATA ISOLATION</span>
+      <span class="mt-1 block font-mono text-sm font-bold text-[#FF5A00] uppercase">PostgreSQL RLS &amp; SSR</span>
+    </div>
+    <div class="bg-[#000000]/90 p-4 sm:p-5">
+      <span class="block font-mono text-xs uppercase tracking-[0.12em] text-zinc-500">04 // EDUCATION</span>
+      <span class="mt-1 block font-mono text-sm font-bold text-white uppercase">B.IT (JCU Singapore)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     2. SELECTED PROJECTS SECTION — ASYMMETRICAL BENTO BOX GRID + 3D TILT
+     ========================================================================== -->
+<section id="projects" aria-labelledby="projects-heading" data-scroll-section class="py-24 sm:py-32 border-b border-white/10">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+    <div>
+      <div class="font-mono text-xs uppercase tracking-[0.2em] text-[#FF5A00] font-semibold mb-3 flex items-center gap-2.5">
+        <span class="w-2 h-2 bg-[#FF5A00]"></span>
+        <span>01 // SELECTED_ARCHITECTURE</span>
+      </div>
+      <h2 id="projects-heading" class="text-4xl sm:text-6xl font-black uppercase tracking-[-0.04em] text-white leading-[0.95]">
+        SELECTED PROJECTS
+      </h2>
+    </div>
+    <p class="max-w-md text-sm sm:text-base text-zinc-400 leading-relaxed">
+      Production web apps and multi-model AI tools. Click any project for architecture and stack details.
+    </p>
+  </div>
+
+  <!-- Asymmetrical 12-Column Bento Box Grid (Row 1: 7/5, Row 2: 5/7) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    {% for project in projects %}
+    {% if loop.index0 == 0 %}
+      {% set bento_span = "lg:col-span-7 lg:order-1" %}
+      {% set img_height = "h-60 sm:h-72" %}
+    {% elif loop.index0 == 1 %}
+      {% set bento_span = "lg:col-span-5 lg:order-2" %}
+      {% set img_height = "h-56 sm:h-64" %}
+    {% elif loop.index0 == 2 %}
+      {% set bento_span = "lg:col-span-7 lg:order-4" %}
+      {% set img_height = "h-60 sm:h-72" %}
+    {% else %}
+      {% set bento_span = "lg:col-span-5 lg:order-3" %}
+      {% set img_height = "h-56 sm:h-64" %}
+    {% endif %}
+
+    <article data-tilt-card data-scroll-item
+             class="group bento-card {{ bento_span }} flex flex-col justify-between overflow-hidden">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+
+      <!-- Top Telemetry Header inside Bento Card -->
+      <div>
+        <div class="px-6 py-3.5 border-b border-white/10 flex items-center justify-between gap-2 bg-black/50">
+          <span class="font-mono text-xs uppercase tracking-[0.14em] text-[#FF5A00] font-semibold">
+            SYS_0{{ loop.index }} // {{ project.type }}
           </span>
-          <h3 class="mt-1.5 text-base font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+          <span class="font-mono text-xs text-zinc-500 group-hover:text-white transition-colors">
+            [ PROD_READY ]
+          </span>
+        </div>
+
+        <!-- Project Visual Frame -->
+        <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}"
+           class="block relative overflow-hidden border-b border-white/10 bg-[#050507]">
+          <img src="{{ project.image }}"
+               alt="{{ project.image_alt }}"
+               loading="lazy"
+               decoding="async"
+               width="800"
+               height="450"
+               class="w-full {{ img_height }} object-cover object-top group-hover:scale-[1.035] transition-transform duration-500 ease-out" />
+          <div class="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors"></div>
+        </a>
+
+        <!-- Project Body Copy -->
+        <div class="p-6 sm:p-8 bento-card-content">
+          <h3 class="text-2xl sm:text-3xl font-black uppercase tracking-[-0.04em] text-white group-hover:text-[#FF5A00] transition-colors">
             <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}">
               {{ project.title }}
             </a>
           </h3>
-          <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+
+          <p class="mt-3 text-sm sm:text-base text-zinc-300 leading-relaxed">
             {{ project.Tagline }}
           </p>
-        </div>
 
-        <div class="mt-5 pt-3 border-t border-zinc-100 dark:border-zinc-800/70 flex items-center justify-between text-xs font-medium">
-          <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}"
-             class="inline-flex items-center gap-1 text-zinc-900 dark:text-zinc-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-            Read case study
-            <span aria-hidden="true" class="group-hover:translate-x-0.5 transition-transform">→</span>
+          <!-- Monospace Stack Tags -->
+          <div class="mt-5 flex flex-wrap gap-1.5">
+            {% for item in project.stack.split(', ') %}
+            <span class="px-2.5 py-1 text-xs font-mono text-zinc-300 bg-white/[0.03] border border-white/10">
+              {{ item }}
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Action Footer -->
+      <div class="px-6 sm:px-8 py-4 border-t border-white/10 bg-black/40 flex flex-wrap items-center justify-between gap-4 font-mono text-xs uppercase tracking-[0.08em]">
+        <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}"
+           class="link-snappy inline-flex items-center gap-2 font-bold text-white group-hover:text-[#FF5A00] transition-colors">
+          <span>Read Case Study</span>
+          <span aria-hidden="true" class="arrow-icon">→</span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          {% if project.github_url %}
+          <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer"
+             class="link-snappy text-zinc-400 hover:text-white transition-colors">
+            GitHub <span class="arrow-icon">↗</span>
           </a>
+          {% endif %}
+          {% if project.live_url %}
+          <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer"
+             class="link-snappy text-[#FF5A00] hover:text-white font-semibold transition-colors">
+            {{ project.live_label | default('Live Web App ↗') }}
+          </a>
+          {% endif %}
         </div>
       </div>
     </article>
@@ -94,57 +217,168 @@
   </div>
 </section>
 
-<!-- 3. ABOUT SECTION (4 sentences max, honest about learning Next.js) -->
-<section id="about" aria-labelledby="about-heading" class="py-16 sm:py-20 border-b border-zinc-200/80 dark:border-zinc-800/80">
-  <h2 id="about-heading" class="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-    About
-  </h2>
-  <div class="mt-4 max-w-2xl space-y-3 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-    {% for sentence in profile.about_sentences %}
-    <p>{{ sentence }}</p>
-    {% endfor %}
+<!-- ==========================================================================
+     3. ABOUT SECTION — ASYMMETRICAL BENTO PROFILE & SPOKEN LANGUAGES
+     ========================================================================== -->
+<section id="about" aria-labelledby="about-heading" data-scroll-section class="py-24 sm:py-32 border-b border-white/10">
+  <div class="mb-14">
+    <div class="font-mono text-xs uppercase tracking-[0.2em] text-[#FF5A00] font-semibold mb-3 flex items-center gap-2.5">
+      <span class="w-2 h-2 bg-[#FF5A00]"></span>
+      <span>02 // ENGINEER_PROFILE</span>
+    </div>
+    <h2 id="about-heading" class="text-4xl sm:text-6xl font-black uppercase tracking-[-0.04em] text-white leading-[0.95]">
+      ABOUT &amp; ARCHITECTURE
+    </h2>
   </div>
 
-  <!-- Languages -->
-  <div class="mt-8 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80 max-w-2xl">
-    <h3 class="font-mono text-xs uppercase tracking-wider text-zinc-500">
-      Languages
-    </h3>
-    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {% for lang in profile.languages %}
-      <div class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40">
-        <span class="text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">{{ lang.name }}</span>
-        <p class="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">{{ lang.proficiency }}</p>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Left Bento Column: 4-Sentence Bio & Education (7 Cols) -->
+    <div data-tilt-card data-scroll-item class="bento-card lg:col-span-7 p-7 sm:p-10 flex flex-col justify-between">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+
+      <div>
+        <div class="flex items-center justify-between pb-5 mb-6 border-b border-white/10">
+          <span class="font-mono text-xs uppercase tracking-[0.14em] text-[#FF5A00] font-semibold">
+            SYS.BIO // OPERATIONAL FOCUS
+          </span>
+          <span class="font-mono text-xs text-zinc-500">JCU SINGAPORE</span>
+        </div>
+
+        <div class="space-y-4 text-base sm:text-lg text-zinc-200 leading-relaxed">
+          {% for sentence in profile.about_sentences %}
+          <p>{{ sentence }}</p>
+          {% endfor %}
+        </div>
       </div>
-      {% endfor %}
+
+      <div class="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="block font-mono text-xs uppercase tracking-[0.12em] text-zinc-500">Academic Credential</span>
+          <span class="mt-1 block font-mono text-xs sm:text-sm text-white font-semibold">{{ profile.education }}</span>
+        </div>
+        <a href="{{ url_for('portfolio.about') }}" class="link-snappy font-mono text-xs uppercase tracking-[0.1em] text-[#FF5A00] hover:text-white font-bold">
+          Full Technical Profile <span class="arrow-icon">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Bento Column: Languages & Core Domains (5 Cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-6">
+      <div data-tilt-card data-scroll-item class="bento-card p-7 sm:p-8 flex-1">
+        <span class="corner-tick-tl" aria-hidden="true"></span>
+        <span class="corner-tick-br" aria-hidden="true"></span>
+
+        <div class="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+          <h3 class="font-mono text-xs uppercase tracking-[0.14em] text-[#FF5A00] font-semibold">
+            LANGUAGES // MULTILINGUAL FLUENCY
+          </h3>
+          <span class="font-mono text-xs text-zinc-500">04 LOCALES</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          {% for lang in profile.languages %}
+          <div class="p-4 bg-black/60 border border-white/10 hover:border-[#FF5A00]/60 transition-colors">
+            <span class="block font-mono text-xs uppercase tracking-[0.12em] text-[#FF5A00] font-bold">
+              {{ lang.name }}
+            </span>
+            <p class="mt-1.5 text-xs sm:text-sm font-medium text-white leading-snug">
+              {{ lang.proficiency }}
+            </p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Technical Execution Pillar Box -->
+      <div data-tilt-card data-scroll-item class="bento-card p-7 sm:p-8">
+        <div class="font-mono text-xs uppercase tracking-[0.14em] text-zinc-400 mb-3">
+          CORE STACK // PRODUCTION PIPELINES
+        </div>
+        <div class="grid grid-cols-2 gap-4 font-mono text-xs">
+          <div class="p-3.5 bg-black/60 border border-white/10">
+            <span class="text-[#FF5A00] block font-bold">BACKEND &amp; AI</span>
+            <span class="text-zinc-300 mt-1 block">Python, Flask, Groq, Gemini, Ollama Qwen</span>
+          </div>
+          <div class="p-3.5 bg-black/60 border border-white/10">
+            <span class="text-[#FF5A00] block font-bold">WEB &amp; DATA</span>
+            <span class="text-zinc-300 mt-1 block">Next.js 14, TypeScript, Supabase RLS, Stripe</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- 4. CONTACT SECTION (Email, GitHub, LinkedIn only) -->
-<section id="contact" aria-labelledby="contact-heading" class="pt-16 sm:pt-20">
-  <h2 id="contact-heading" class="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-    Contact
-  </h2>
-  <p class="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
-    Reach out directly by email or check my code and profile below.
-  </p>
+<!-- ==========================================================================
+     4. CONTACT SECTION — DIRECT TRANSMISSION CHANNELS
+     ========================================================================== -->
+<section id="contact" aria-labelledby="contact-heading" data-scroll-section class="pt-24 sm:pt-32">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <div>
+      <div class="font-mono text-xs uppercase tracking-[0.2em] text-[#FF5A00] font-semibold mb-3 flex items-center gap-2.5">
+        <span class="w-2 h-2 bg-[#FF5A00]"></span>
+        <span>03 // DIRECT_TRANSMISSION</span>
+      </div>
+      <h2 id="contact-heading" class="text-4xl sm:text-6xl font-black uppercase tracking-[-0.04em] text-white leading-[0.95]">
+        CONTACT
+      </h2>
+    </div>
+    <p class="max-w-md text-sm sm:text-base text-zinc-400">
+      Reach out directly by email or check my code and profile below.
+    </p>
+  </div>
 
-  <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <a href="mailto:{{ profile.email }}"
-       class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors">
-      <span class="block text-xs font-mono uppercase text-zinc-500">Email</span>
-      <span class="mt-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{{ profile.email }}</span>
+       data-tilt-card data-scroll-item
+       class="group bento-card p-7 sm:p-8 flex flex-col justify-between">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+      <div class="flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
+        <span>01 // ELECTRONIC MAIL</span>
+        <span class="text-[#FF5A00] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">↗</span>
+      </div>
+      <div class="mt-8">
+        <span class="block text-xs font-mono uppercase text-[#FF5A00] mb-1">Direct Inbox</span>
+        <span class="block text-lg sm:text-xl font-bold text-white group-hover:text-[#FF5A00] transition-colors break-all">
+          {{ profile.email }}
+        </span>
+      </div>
     </a>
+
     <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer"
-       class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors">
-      <span class="block text-xs font-mono uppercase text-zinc-500">GitHub</span>
-      <span class="mt-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100">github.com/DDee3</span>
+       data-tilt-card data-scroll-item
+       class="group bento-card p-7 sm:p-8 flex flex-col justify-between">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+      <div class="flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
+        <span>02 // CODE REPOSITORIES</span>
+        <span class="text-[#FF5A00] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">↗</span>
+      </div>
+      <div class="mt-8">
+        <span class="block text-xs font-mono uppercase text-[#FF5A00] mb-1">GitHub</span>
+        <span class="block text-lg sm:text-xl font-bold text-white group-hover:text-[#FF5A00] transition-colors">
+          github.com/DDee3
+        </span>
+      </div>
     </a>
+
     <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer"
-       class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 hover:border-emerald-500/60 dark:hover:border-emerald-500/60 transition-colors">
-      <span class="block text-xs font-mono uppercase text-zinc-500">LinkedIn</span>
-      <span class="mt-1 block text-sm font-medium text-zinc-900 dark:text-zinc-100">in/nay-thar-htet-73b5702ba</span>
+       data-tilt-card data-scroll-item
+       class="group bento-card p-7 sm:p-8 flex flex-col justify-between">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+      <div class="flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
+        <span>03 // PROFESSIONAL NETWORK</span>
+        <span class="text-[#FF5A00] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">↗</span>
+      </div>
+      <div class="mt-8">
+        <span class="block text-xs font-mono uppercase text-[#FF5A00] mb-1">LinkedIn</span>
+        <span class="block text-lg sm:text-xl font-bold text-white group-hover:text-[#FF5A00] transition-colors">
+          in/nay-thar-htet-73b5702ba
+        </span>
+      </div>
     </a>
   </div>
 </section>

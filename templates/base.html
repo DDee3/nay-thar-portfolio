@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,37 +12,31 @@
   <meta property="og:title" content="{{ page_title | default(profile.name ~ ' — ' ~ profile.role) }}" />
   <meta property="og:description" content="{{ meta_description | default(profile.pitch) }}" />
   <meta property="og:url" content="{{ profile.site_url }}{{ request.path }}" />
-  <meta property="og:image" content="{{ profile.site_url }}/static/img/prophet-forecast.png" />
+  <meta property="og:image" content="{{ profile.site_url }}/static/img/launch-kit.svg" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Inter & JetBrains Mono Fonts -->
+  <!-- Inter (400-900) & JetBrains Mono (400-800) Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Prevent theme flash before paint -->
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem('theme');
-        if (saved === 'light') {
-          document.documentElement.classList.remove('dark');
-        } else {
-          document.documentElement.classList.add('dark');
-        }
-      } catch (e) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
-
-  <!-- Tailwind CSS via CDN + Custom Stylesheet -->
+  <!-- Tailwind CSS via CDN + Custom Industrial Config -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          colors: {
+            obsidian: '#000000',
+            surface: '#09090b',
+            orange: {
+              DEFAULT: '#FF5A00',
+              500: '#FF5A00',
+              400: '#FF7426',
+              600: '#E04F00'
+            }
+          },
           fontFamily: {
             sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace']
@@ -53,78 +47,98 @@
   </script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" />
 </head>
-<body class="min-h-screen flex flex-col bg-zinc-50 text-zinc-900 dark:bg-[#09090b] dark:text-zinc-100 font-sans antialiased selection:bg-emerald-500/20 selection:text-emerald-400 transition-colors duration-200">
-  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-md focus:bg-emerald-500 focus:text-zinc-950 focus:font-medium">
+<body class="min-h-screen flex flex-col bg-[#000000] text-white font-sans antialiased selection:bg-[#FF5A00] selection:text-black overflow-x-hidden">
+  <!-- Skip Navigation Link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FF5A00] focus:text-black focus:font-mono focus:text-xs focus:font-bold focus:uppercase">
     Skip to content
   </a>
 
-  <!-- Top Navigation -->
-  <header class="sticky top-0 z-40 border-b border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/85 dark:bg-[#09090b]/85 backdrop-blur-md">
-    <div class="max-w-4xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-      <a href="{{ url_for('portfolio.index') }}" class="flex items-center focus:outline-none">
-        <span class="font-semibold tracking-tight text-sm sm:text-base text-zinc-900 dark:text-zinc-100">
-          {{ profile.name }}
+  <!-- Spatial Grid Backdrop -->
+  <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-0 bg-spatial-grid bg-radial-mask"></div>
+
+  <!-- Top Sticky Glassmorphic Navigation -->
+  <header class="sticky top-0 z-50 glass-nav">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between gap-4">
+      <!-- Brand Identity -->
+      <a href="{{ url_for('portfolio.index') }}" class="group flex items-center gap-3 focus:outline-none">
+        <span class="w-8 h-8 flex items-center justify-center border border-white/15 bg-white/[0.03] group-hover:border-[#FF5A00] group-hover:bg-[#FF5A00]/10 transition-colors">
+          <span class="font-mono text-xs font-bold text-[#FF5A00]">&gt;_</span>
         </span>
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-2.5">
+          <span class="font-black uppercase tracking-[-0.04em] text-sm sm:text-base text-white group-hover:text-[#FF5A00] transition-colors">
+            {{ profile.name }}
+          </span>
+          <span class="hidden md:inline-block font-mono text-[11px] font-semibold tracking-[0.14em] text-[#FF5A00]">
+            // SYS.ENG
+          </span>
+        </div>
       </a>
 
+      <!-- Technical Monospace Navigation -->
       <nav aria-label="Main navigation" class="flex items-center gap-1 sm:gap-2">
         <a href="{{ url_for('portfolio.projects') }}"
-           class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if request.path.startswith('/projects') %}text-zinc-900 dark:text-white bg-zinc-200/70 dark:bg-zinc-800/80{% else %}text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100{% endif %}">
-          Projects
+           class="px-3 py-2 text-xs font-mono uppercase tracking-[0.08em] transition-all border {% if request.path.startswith('/projects') %}border-[#FF5A00]/60 bg-[#FF5A00]/10 text-white{% else %}border-transparent text-zinc-400 hover:text-white hover:border-white/10 hover:bg-white/[0.03]{% endif %}">
+          <span class="text-[#FF5A00] mr-1">01.</span>Projects
         </a>
         <a href="{{ url_for('portfolio.about') }}"
-           class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if request.path == '/about' %}text-zinc-900 dark:text-white bg-zinc-200/70 dark:bg-zinc-800/80{% else %}text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100{% endif %}">
-          About
+           class="px-3 py-2 text-xs font-mono uppercase tracking-[0.08em] transition-all border {% if request.path == '/about' %}border-[#FF5A00]/60 bg-[#FF5A00]/10 text-white{% else %}border-transparent text-zinc-400 hover:text-white hover:border-white/10 hover:bg-white/[0.03]{% endif %}">
+          <span class="text-[#FF5A00] mr-1">02.</span>About
         </a>
         <a href="{{ url_for('portfolio.contact') }}"
-           class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors {% if request.path == '/contact' %}text-zinc-900 dark:text-white bg-zinc-200/70 dark:bg-zinc-800/80{% else %}text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100{% endif %}">
-          Contact
+           class="px-3 py-2 text-xs font-mono uppercase tracking-[0.08em] transition-all border {% if request.path == '/contact' %}border-[#FF5A00]/60 bg-[#FF5A00]/10 text-white{% else %}border-transparent text-zinc-400 hover:text-white hover:border-white/10 hover:bg-white/[0.03]{% endif %}">
+          <span class="text-[#FF5A00] mr-1">03.</span>Contact
         </a>
 
-        <button id="theme-toggle" type="button" aria-label="Toggle color theme"
-                class="ml-1 p-2 rounded-md border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
-          <!-- Sun icon (shown in dark mode) -->
-          <svg id="icon-sun" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5M12 19.5V21M4.22 4.22l1.06 1.06M18.72 18.72l1.06 1.06M3 12h1.5M19.5 12H21M4.22 19.78l1.06-1.06M18.72 5.28l1.06-1.06M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg id="icon-moon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-          </svg>
-        </button>
+        <a href="mailto:{{ profile.email }}"
+           data-magnetic
+           class="hidden sm:inline-flex ml-2 px-4 py-2 text-xs btn-orange">
+          <span>Hire / Email</span>
+          <span aria-hidden="true" class="arrow-icon">↗</span>
+        </a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main id="main-content" class="flex-1 max-w-4xl w-full mx-auto px-5 sm:px-8 py-12 sm:py-20 fade-up">
-    {% block content %}{% endblock %}
-  </main>
+  <!-- Smooth Scroll Content Container -->
+  <div id="lenis-wrapper" class="relative z-10 flex-1 flex flex-col">
+    <main id="main-content" class="flex-1 max-w-6xl w-full mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24">
+      {% block content %}{% endblock %}
+    </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-zinc-200/80 dark:border-zinc-800/80 py-8 mt-16">
-    <div class="max-w-4xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 dark:text-zinc-500">
-      <p>{{ profile.name }} · {{ profile.role }}</p>
-      <div class="flex items-center gap-5">
-        <a href="mailto:{{ profile.email }}" class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors">Email</a>
-        <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors">GitHub</a>
-        <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors">LinkedIn</a>
+    <!-- Industrial Telemetry Footer -->
+    <footer class="border-t border-white/10 bg-black/80 backdrop-blur-md py-12 mt-20">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2 h-2 rounded-full bg-[#FF5A00] animate-pulse"></span>
+            <span class="font-mono text-xs uppercase tracking-[0.14em] text-white font-semibold">
+              {{ profile.name }} // {{ profile.role }}
+            </span>
+          </div>
+          <p class="font-mono text-xs text-zinc-500">
+            {{ profile.education }} · <span id="telemetry-clock" class="text-zinc-400">SGT // UTC+8</span>
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-6 font-mono text-xs uppercase tracking-[0.1em]">
+          <a href="mailto:{{ profile.email }}" class="link-snappy text-zinc-400 hover:text-[#FF5A00] transition-colors">
+            [ Email <span class="arrow-icon">↗</span> ]
+          </a>
+          <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" class="link-snappy text-zinc-400 hover:text-[#FF5A00] transition-colors">
+            [ GitHub <span class="arrow-icon">↗</span> ]
+          </a>
+          <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="link-snappy text-zinc-400 hover:text-[#FF5A00] transition-colors">
+            [ LinkedIn <span class="arrow-icon">↗</span> ]
+          </a>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 
-  <script>
-    (function () {
-      var btn = document.getElementById('theme-toggle');
-      if (!btn) return;
-      btn.addEventListener('click', function () {
-        var root = document.documentElement;
-        var isDark = root.classList.toggle('dark');
-        try {
-          localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        } catch (e) {}
-      });
-    })();
-  </script>
+  <!-- 3D, Smooth Scroll (Lenis) & Framer Motion DOM Runtime -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js" defer></script>
+  <script src="{{ url_for('static', filename='js/portfolio-motion.js') }}" defer></script>
 </body>
 </html>

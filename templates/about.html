@@ -1,55 +1,95 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section aria-labelledby="about-page-heading" class="max-w-2xl">
-  <h1 id="about-page-heading" class="text-2xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-    About {{ profile.name }}
-  </h1>
-  <p class="mt-2 text-sm font-mono text-emerald-600 dark:text-emerald-400">
-    {{ profile.education }}
-  </p>
-
-  <!-- 4 sentences max, honest about Next.js -->
-  <div class="mt-8 space-y-4 text-base sm:text-lg text-zinc-700 dark:text-zinc-300 leading-relaxed">
-    {% for sentence in profile.about_sentences %}
-    <p>{{ sentence }}</p>
-    {% endfor %}
-  </div>
-
-  <!-- Technical Snapshot -->
-  <div class="mt-10 pt-8 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
-    <div>
-      <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500">Backend &amp; AI</h2>
-      <p class="mt-2 text-zinc-800 dark:text-zinc-200">
-        Python, Flask, REST APIs, Groq API, Local Qwen via Ollama, llama-cpp-python, multi-model routing
-      </p>
+<section aria-labelledby="about-page-heading" class="space-y-16">
+  <!-- Header -->
+  <header class="pb-12 border-b border-white/10">
+    <div class="font-mono text-xs uppercase tracking-[0.2em] text-[#FF5A00] font-semibold mb-4 flex items-center gap-2.5" data-hero-reveal>
+      <span class="w-2 h-2 bg-[#FF5A00]"></span>
+      <span>ENGINEER_SPEC // {{ profile.education }}</span>
     </div>
-    <div>
-      <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500">Frontend &amp; Data</h2>
-      <p class="mt-2 text-zinc-800 dark:text-zinc-200">
-        Next.js 14 (App Router), TypeScript, Tailwind CSS, PostgreSQL / Supabase (SSR &amp; RLS), Stripe Webhooks, Chart.js
-      </p>
-    </div>
-  </div>
+    <h1 id="about-page-heading" class="text-5xl sm:text-7xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]" data-hero-reveal>
+      ABOUT <span class="text-[#FF5A00]">{{ profile.name }}.</span>
+    </h1>
+  </header>
 
-  <!-- Languages -->
-  <div class="mt-10 pt-8 border-t border-zinc-200 dark:border-zinc-800">
-    <h2 class="font-mono text-xs uppercase tracking-wider text-zinc-500">Languages</h2>
-    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {% for lang in profile.languages %}
-      <div class="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40">
-        <span class="text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">{{ lang.name }}</span>
-        <p class="mt-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">{{ lang.proficiency }}</p>
+  <!-- Asymmetrical Bento Profile Layout -->
+  <div data-scroll-section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- 4 Sentences Bio (7 Columns) -->
+    <div data-tilt-card data-scroll-item class="bento-card lg:col-span-7 p-8 sm:p-10 flex flex-col justify-between">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+      <div>
+        <div class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-6 border-b border-white/10">
+          01 // ENGINEERING NARRATIVE
+        </div>
+        <div class="space-y-5 text-base sm:text-lg text-zinc-200 leading-relaxed">
+          {% for sentence in profile.about_sentences %}
+          <p>{{ sentence }}</p>
+          {% endfor %}
+        </div>
       </div>
-      {% endfor %}
+
+      <div class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between font-mono text-xs text-zinc-400">
+        <span>CREDENTIAL // JCU SINGAPORE</span>
+        <span class="text-[#FF5A00] font-bold">B.IT GRADUATE</span>
+      </div>
+    </div>
+
+    <!-- Technical Snapshot (5 Columns) -->
+    <div class="lg:col-span-5 flex flex-col gap-6">
+      <div data-tilt-card data-scroll-item class="bento-card p-7 sm:p-8 flex-1">
+        <span class="corner-tick-tl" aria-hidden="true"></span>
+        <span class="corner-tick-br" aria-hidden="true"></span>
+        <h2 class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-3 mb-4 border-b border-white/10">
+          02 // Backend &amp; AI
+        </h2>
+        <p class="text-sm sm:text-base text-zinc-200 leading-relaxed font-mono">
+          Python, Flask, REST APIs, Groq API, Local Qwen via Ollama, llama-cpp-python, multi-model routing
+        </p>
+      </div>
+
+      <div data-tilt-card data-scroll-item class="bento-card p-7 sm:p-8 flex-1">
+        <span class="corner-tick-tl" aria-hidden="true"></span>
+        <span class="corner-tick-br" aria-hidden="true"></span>
+        <h2 class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-3 mb-4 border-b border-white/10">
+          03 // Frontend &amp; Data
+        </h2>
+        <p class="text-sm sm:text-base text-zinc-200 leading-relaxed font-mono">
+          Next.js 14 (App Router), TypeScript, Tailwind CSS, PostgreSQL / Supabase (SSR &amp; RLS), Stripe Webhooks, Chart.js
+        </p>
+      </div>
+    </div>
+
+    <!-- Languages (12 Columns Bento Strip) -->
+    <div data-tilt-card data-scroll-item class="bento-card lg:col-span-12 p-7 sm:p-10">
+      <span class="corner-tick-tl" aria-hidden="true"></span>
+      <span class="corner-tick-br" aria-hidden="true"></span>
+      <h2 class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-6 border-b border-white/10">
+        04 // Languages
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {% for lang in profile.languages %}
+        <div class="p-5 bg-black/60 border border-white/10 hover:border-[#FF5A00] transition-colors">
+          <span class="font-mono text-xs uppercase tracking-[0.14em] text-[#FF5A00] font-bold">
+            {{ lang.name }}
+          </span>
+          <p class="mt-2 text-sm font-semibold text-white">
+            {{ lang.proficiency }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 
   <!-- Single Clear CTA -->
-  <div class="mt-12">
+  <div data-scroll-section class="pt-4">
     <a href="{{ url_for('portfolio.projects') }}"
-       class="inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors">
-      See What I Have Built →
+       data-magnetic
+       class="px-8 py-4 text-xs sm:text-sm btn-orange">
+      <span>See What I Have Built</span>
+      <span aria-hidden="true" class="arrow-icon">→</span>
     </a>
   </div>
 </section>
