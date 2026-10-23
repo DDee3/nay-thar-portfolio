@@ -61,7 +61,7 @@ PROJECTS = {
         ),
         "live_url": "https://launch-kit-release.vercel.app/",
         "live_label": "Live Web App ↗",
-        "github_url": "https://github.com/DDee3/Micro-SaaS",
+        "github_url": None,
     },
     "seller-hub": {
         "slug": "seller-hub",
