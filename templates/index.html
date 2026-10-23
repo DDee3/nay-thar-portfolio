@@ -25,7 +25,7 @@
     <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Groq API</span>
     <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Local Qwen (Ollama)</span>
     <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">HTML / Tailwind / JS</span>
-    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Next.js (Learning)</span>
+    <span class="px-2.5 py-1 rounded bg-zinc-200/70 dark:bg-zinc-900 border border-zinc-300/60 dark:border-zinc-800">Next.js 14 / TypeScript / Stripe</span>
   </div>
 
   <!-- Two Hero CTAs -->
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     {% for project in projects %}
     <article class="group rounded-xl border border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-zinc-900/40 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all flex flex-col overflow-hidden">
       <a href="{{ url_for('portfolio.project_detail', slug=project.slug) }}" class="block overflow-hidden border-b border-zinc-200/70 dark:border-zinc-800/80 bg-zinc-100 dark:bg-zinc-950">

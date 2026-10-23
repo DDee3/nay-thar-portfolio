@@ -12,7 +12,7 @@ PROFILE = {
     "about_sentences": [
         "I am a Python developer with a Bachelor of Information Technology from James Cook University Singapore, focused on backend systems and practical AI integrations.",
         "Most of my work lives in Flask, REST APIs, and multi-model LLM pipelines that combine fast cloud inference (Groq, Gemini, DeepSeek) with locally hosted Qwen models running on Ollama.",
-        "On the frontend, I am comfortable building clean interfaces with HTML, Tailwind CSS, and JavaScript, and I am actively learning Next.js to round out my full-stack toolkit.",
+        "On the frontend, I build clean, responsive interfaces with Next.js 14 (App Router), TypeScript, Tailwind CSS, and modern UI primitives.",
         "I care about shipping software that stays fast, keeps user data isolated, and solves concrete problems without unnecessary complexity.",
     ],
     "languages": [
@@ -24,6 +24,45 @@ PROFILE = {
 }
 
 PROJECTS = {
+    "launch-kit": {
+        "slug": "launch-kit",
+        "title": "LaunchKit",
+        "type": "Next.js 14 Micro-SaaS Boilerplate",
+        "Tagline": "Production-grade Next.js 14 App Router starter kit engineered with Supabase SSR authentication, PostgreSQL Row Level Security, and idempotent Stripe subscription webhooks.",
+        "image": "/static/img/launch-kit.svg",
+        "image_alt": "LaunchKit spatial Micro-SaaS architecture preview showing system telemetry and Stripe webhook pipeline",
+        "problem_heading": "Problem & Architectural Goal",
+        "problem": (
+            "Building a commercial Micro-SaaS from scratch typically burns 40+ hours wiring together fragile authentication "
+            "callbacks, out-of-sync Stripe webhook listeners, and unguarded database tables.\n\n"
+            "Many starter templates rely on bloated abstractions, skip strict database Row Level Security (RLS), or suffer from "
+            "unauthenticated hydration flashes on Edge routes and race conditions when synchronizing subscription status changes."
+        ),
+        "built_heading": "Architecture & Key Engineering Features",
+        "what_i_built": (
+            "• Idempotent Stripe Webhook Pipeline: Engineered a cryptographically verified webhook engine (/api/stripe/webhook) "
+            "using stripe.webhooks.constructEvent() with safe billing period extraction, direct Supabase Admin profile synchronization, "
+            "and instant Next.js cache invalidation via revalidatePath('/dashboard').\n\n"
+            "• Supabase SSR Token Engine & Edge Middleware: Implemented cookie-based @supabase/ssr authentication supporting "
+            "Email/Password and Google OAuth (PKCE flow). Configured Next.js Edge Middleware (middleware.ts) to proactively refresh "
+            "session tokens and guard protected routes before any Server Component renders.\n\n"
+            "• Hardened PostgreSQL & Row Level Security (RLS): Designed automated Postgres signup triggers (handle_new_user) linking "
+            "auth.users to isolated public.profiles records, enforcing strict RLS policies with auth.uid() so tenants can never read or mutate "
+            "another customer's subscription state.\n\n"
+            "• Self-Service Stripe Customer Portal: Built single-use encrypted billing portal sessions (/api/stripe/portal) enabling "
+            "subscribers to switch between Monthly/Annual tiers, update payment methods, and manage cancellations with zero support overhead."
+        ),
+        "stack": "Next.js 14 (App Router), TypeScript (Strict), Supabase SSR, PostgreSQL (RLS), Stripe SDK & Webhooks, Tailwind CSS, Radix UI",
+        "learned_heading": "What I Learned",
+        "what_i_learned": (
+            "Designing idempotent Stripe webhook handlers alongside Edge SSR session refreshes requires strict separation between "
+            "user-scoped Supabase clients (enforcing PostgreSQL RLS) and service-role admin clients (restricted exclusively to signature-verified "
+            "server-side webhook routes) to guarantee zero cross-tenant data leaks and instant billing state consistency."
+        ),
+        "live_url": "https://launch-kit-release.vercel.app/",
+        "live_label": "Live Web App ↗",
+        "github_url": "https://github.com/DDee3/Micro-SaaS",
+    },
     "seller-hub": {
         "slug": "seller-hub",
         "title": "Seller Hub",
