@@ -1,68 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-<article aria-labelledby="project-title" class="space-y-14">
-  <!-- Top Breadcrumb & Navigation -->
-  <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10" data-hero-reveal>
-    <a href="{{ url_for('portfolio.projects') }}"
-       class="link-snappy inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-zinc-400 hover:text-[#FF5A00] transition-colors">
-      <span>← Back to Projects</span>
+<article aria-labelledby="project-title" class="py-24 sm:py-36 space-y-24">
+  <!-- Breadcrumb -->
+  <div class="pb-6 border-b border-[#D2D2D7] flex items-center justify-between text-sm" data-hero-reveal>
+    <a href="{{ url_for('portfolio.projects') }}" class="apple-link">
+      <span>← All Selected Works</span>
     </a>
-    <span class="font-mono text-xs uppercase tracking-[0.14em] text-[#FF5A00] font-semibold">
-      CASE STUDY // {{ project.slug | upper }}
+    <span class="font-medium text-[#6E6E73]">
+      {{ project.type }}
     </span>
   </div>
 
-  <!-- Case Study Hero Header -->
-  <header class="space-y-6" data-hero-reveal>
-    <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 glass-panel font-mono text-xs uppercase tracking-[0.14em] text-[#FF5A00] font-semibold">
-      <span class="w-2 h-2 bg-[#FF5A00]"></span>
-      <span>{{ project.type }}</span>
-    </div>
-
-    <h1 id="project-title" class="text-5xl sm:text-7xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
+  <!-- Center-Aligned Case Study Header -->
+  <header class="max-w-4xl mx-auto text-center space-y-6" data-hero-reveal>
+    <h1 id="project-title" class="apple-display tracking-[-0.04em]">
       {{ project.title }}
     </h1>
-
-    <p class="max-w-3xl text-lg sm:text-xl text-zinc-300 leading-relaxed">
+    <p class="apple-lead max-w-2xl mx-auto">
       {{ project.Tagline }}
     </p>
 
-    <div class="pt-2 flex flex-wrap items-center gap-4">
+    <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
       {% if project.live_url %}
-      <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer"
-         data-magnetic
-         class="px-6 py-3 text-xs sm:text-sm btn-orange">
-        <span>{{ project.live_label | default('Live Web App ↗') }}</span>
+      <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer" class="btn-apple-primary">
+        <span>{{ project.live_label | default('Live web app ↗') }}</span>
       </a>
       {% endif %}
       {% if project.github_url %}
-      <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer"
-         data-magnetic
-         class="px-6 py-3 text-xs sm:text-sm btn-glass">
-        <span>GitHub Repository</span>
-        <span aria-hidden="true" class="arrow-icon">↗</span>
+      <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="btn-apple-secondary">
+        <span>Source Repository</span>
+        <span aria-hidden="true" class="arrow-shift">↗</span>
       </a>
       {% endif %}
     </div>
   </header>
 
-  <!-- Project Visual Showcase -->
+  <!-- Full-Width Project Showcase Visuals -->
   {% if project.images %}
-  <div data-scroll-section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div data-scroll-section class="space-y-12">
     {% for img in project.images %}
-    <figure data-tilt-card data-scroll-item class="bento-card overflow-hidden">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <img src="{{ img.url if img.url is defined else img }}"
-           alt="{{ img.alt if img.alt is defined else project.title }}"
-           loading="lazy"
-           width="1200"
-           height="630"
-           class="w-full h-auto object-cover border-b border-white/10" />
+    <figure data-scroll-item class="apple-surface p-6 sm:p-12 space-y-4">
+      <div class="overflow-hidden bg-[#EBEBED]">
+        <img src="{{ img.url if img.url is defined else img }}"
+             alt="{{ img.alt if img.alt is defined else project.title }}"
+             loading="lazy"
+             width="1200"
+             height="630"
+             class="w-full h-auto object-cover" />
+      </div>
       {% if img.caption is defined %}
-      <figcaption class="px-5 py-3.5 text-xs font-mono text-zinc-400 bg-black/70">
-        <span class="text-[#FF5A00] font-bold mr-1.5">FIG_0{{ loop.index }} //</span>{{ img.caption }}
+      <figcaption class="text-sm text-[#6E6E73] text-center">
+        {{ img.caption }}
       </figcaption>
       {% endif %}
     </figure>
@@ -70,113 +59,102 @@
   </div>
   {% else %}
   <div data-scroll-section>
-    <div data-tilt-card data-scroll-item class="bento-card overflow-hidden">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <div class="px-5 py-3 border-b border-white/10 bg-black/60 flex items-center justify-between font-mono text-xs text-zinc-400">
-        <span>VISUAL_TELEMETRY // {{ project.title | upper }}</span>
-        <span class="text-[#FF5A00]">16:9 VIEWPORT</span>
+    <figure data-scroll-item class="apple-surface p-6 sm:p-14">
+      <div class="overflow-hidden bg-[#EBEBED]">
+        <img src="{{ project.image }}"
+             alt="{{ project.image_alt }}"
+             width="1200"
+             height="675"
+             class="w-full h-auto object-cover" />
       </div>
-      <img src="{{ project.image }}"
-           alt="{{ project.image_alt }}"
-           width="800"
-           height="450"
-           class="w-full h-auto object-cover" />
-    </div>
+    </figure>
   </div>
   {% endif %}
 
-  <!-- Asymmetrical Bento Case Study Breakdown (5-Part Architecture Format) -->
-  <div data-scroll-section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-    <!-- 1. Problem (7 Columns) -->
-    <section aria-labelledby="section-problem" data-tilt-card data-scroll-item class="bento-card lg:col-span-7 p-7 sm:p-9">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <h2 id="section-problem" class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-5 border-b border-white/10">
-        01 // {{ project.problem_heading | default('Problem') }}
-      </h2>
-      <p class="text-base sm:text-lg text-zinc-200 leading-relaxed whitespace-pre-line">
-        {{ project.problem }}
-      </p>
+  <!-- Editorial Case Study Sections -->
+  <div data-scroll-section class="border-t border-[#D2D2D7]">
+    <!-- 1. Problem -->
+    <section aria-labelledby="section-problem" data-scroll-item class="py-16 border-b border-[#D2D2D7] grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4">
+        <h2 id="section-problem" class="text-2xl font-bold tracking-[-0.03em] text-[#1D1D1F]">
+          {{ project.problem_heading | default('Problem') }}
+        </h2>
+      </div>
+      <div class="lg:col-span-8">
+        <p class="text-base sm:text-lg text-[#1D1D1F] leading-relaxed whitespace-pre-line body-measure">
+          {{ project.problem }}
+        </p>
+      </div>
     </section>
 
-    <!-- 2. Stack Matrix (5 Columns) -->
-    <section aria-labelledby="section-stack" data-tilt-card data-scroll-item class="bento-card lg:col-span-5 p-7 sm:p-9 flex flex-col justify-between">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <div>
-        <h2 id="section-stack" class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-5 border-b border-white/10">
-          02 // Stack &amp; Infrastructure
+    <!-- 2. What I Built -->
+    <section aria-labelledby="section-built" data-scroll-item class="py-16 border-b border-[#D2D2D7] grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4">
+        <h2 id="section-built" class="text-2xl font-bold tracking-[-0.03em] text-[#1D1D1F]">
+          {{ project.built_heading | default('What I Built') }}
         </h2>
-        <div class="flex flex-wrap gap-2">
+      </div>
+      <div class="lg:col-span-8">
+        <p class="text-base sm:text-lg text-[#1D1D1F] leading-relaxed whitespace-pre-line body-measure">
+          {{ project.what_i_built }}
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Stack -->
+    <section aria-labelledby="section-stack" data-scroll-item class="py-16 border-b border-[#D2D2D7] grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4">
+        <h2 id="section-stack" class="text-2xl font-bold tracking-[-0.03em] text-[#1D1D1F]">
+          Technical Stack
+        </h2>
+      </div>
+      <div class="lg:col-span-8 space-y-4">
+        <div class="flex flex-wrap gap-2.5">
           {% for tech in project.stack.split(', ') %}
-          <span class="px-3 py-1.5 text-xs font-mono uppercase tracking-[0.06em] text-white bg-black/70 border border-white/15">
+          <span class="px-4 py-2 rounded-full text-sm font-medium text-[#1D1D1F] bg-[#FFFFFF]">
             {{ tech }}
           </span>
           {% endfor %}
         </div>
+        <p class="text-sm text-[#6E6E73]">
+          {{ project.stack }}
+        </p>
       </div>
-
-      <p class="mt-6 pt-4 border-t border-white/10 font-mono text-xs text-zinc-400">
-        {{ project.stack }}
-      </p>
     </section>
 
-    <!-- 3. What I Built (12 Columns Full-Width Engineering Spec) -->
-    <section aria-labelledby="section-built" data-tilt-card data-scroll-item class="bento-card lg:col-span-12 p-7 sm:p-10">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <h2 id="section-built" class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-6 border-b border-white/10">
-        03 // {{ project.built_heading | default('What I Built') }}
-      </h2>
-      <p class="text-base sm:text-lg text-zinc-200 leading-relaxed whitespace-pre-line">
-        {{ project.what_i_built }}
-      </p>
-    </section>
-
-    <!-- 4. What I Learned (8 Columns) -->
-    <section aria-labelledby="section-learned" data-tilt-card data-scroll-item class="bento-card lg:col-span-8 p-7 sm:p-9">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <h2 id="section-learned" class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-5 border-b border-white/10">
-        04 // {{ project.learned_heading | default('What I Learned') }}
-      </h2>
-      <p class="text-base sm:text-lg text-zinc-200 leading-relaxed whitespace-pre-line">
-        {{ project.what_i_learned }}
-      </p>
-    </section>
-
-    <!-- 5. Links & Deployment (4 Columns) -->
-    <section aria-labelledby="section-links" data-tilt-card data-scroll-item class="bento-card lg:col-span-4 p-7 sm:p-9 flex flex-col justify-between">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <div>
-        <h2 id="section-links" class="font-mono text-xs uppercase tracking-[0.16em] text-[#FF5A00] font-bold pb-4 mb-5 border-b border-white/10">
-          05 // Links
+    <!-- 4. What I Learned -->
+    <section aria-labelledby="section-learned" data-scroll-item class="py-16 border-b border-[#D2D2D7] grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4">
+        <h2 id="section-learned" class="text-2xl font-bold tracking-[-0.03em] text-[#1D1D1F]">
+          {{ project.learned_heading | default('What I Learned') }}
         </h2>
-        <div class="flex flex-col gap-3.5">
-          {% if project.live_url %}
-          <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer"
-             data-magnetic
-             class="w-full px-5 py-3.5 text-xs btn-orange">
-            <span>{{ project.live_label | default('Live Web App ↗') }}</span>
-          </a>
-          {% endif %}
-          {% if project.github_url %}
-          <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer"
-             data-magnetic
-             class="w-full px-5 py-3.5 text-xs btn-glass">
-            <span>GitHub Repository</span>
-            <span aria-hidden="true" class="arrow-icon">↗</span>
-          </a>
-          {% endif %}
-        </div>
       </div>
+      <div class="lg:col-span-8">
+        <p class="text-base sm:text-lg text-[#1D1D1F] leading-relaxed whitespace-pre-line body-measure">
+          {{ project.what_i_learned }}
+        </p>
+      </div>
+    </section>
 
-      <div class="mt-8 pt-4 border-t border-white/10">
-        <a href="{{ url_for('portfolio.projects') }}" class="link-snappy font-mono text-xs uppercase tracking-[0.1em] text-zinc-400 hover:text-white">
-          ← All Deployed Systems
+    <!-- 5. Direct Links -->
+    <section aria-labelledby="section-links" data-scroll-item class="py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-4">
+        <h2 id="section-links" class="text-2xl font-bold tracking-[-0.03em] text-[#1D1D1F]">
+          Links
+        </h2>
+      </div>
+      <div class="lg:col-span-8 flex flex-wrap items-center gap-4">
+        {% if project.live_url %}
+        <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer" class="btn-apple-primary">
+          <span>{{ project.live_label | default('Live web app ↗') }}</span>
         </a>
+        {% endif %}
+        {% if project.github_url %}
+        <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer" class="btn-apple-secondary">
+          <span>GitHub Repository</span>
+          <span aria-hidden="true" class="arrow-shift">↗</span>
+        </a>
+        {% endif %}
       </div>
     </section>
   </div>

@@ -1,45 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ page_title | default(profile.name ~ ' — ' ~ profile.role) }}</title>
   <meta name="description" content="{{ meta_description | default(profile.pitch) }}" />
   <meta name="author" content="{{ profile.name }}" />
+  <meta name="theme-color" content="#F5F5F7" />
 
   <!-- Open Graph / Social Meta -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="{{ page_title | default(profile.name ~ ' — ' ~ profile.role) }}" />
   <meta property="og:description" content="{{ meta_description | default(profile.pitch) }}" />
   <meta property="og:url" content="{{ profile.site_url }}{{ request.path }}" />
-  <meta property="og:image" content="{{ profile.site_url }}/static/img/launch-kit.svg" />
+  <meta property="og:image" content="{{ profile.site_url }}/static/img/prophet-forecast.png" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Inter (400-900) & JetBrains Mono (400-800) Fonts -->
+  <!-- Clean, Crisp Sans-Serif Font (Inter) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Tailwind CSS via CDN + Custom Industrial Config -->
+  <!-- Tailwind CSS via CDN + Signature Apple Light Palette -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            obsidian: '#000000',
-            surface: '#09090b',
-            orange: {
-              DEFAULT: '#FF5A00',
-              500: '#FF5A00',
-              400: '#FF7426',
-              600: '#E04F00'
+            apple: {
+              bg: '#F5F5F7',
+              surface: '#FFFFFF',
+              alt: '#EBEBED',
+              ink: '#1D1D1F',
+              muted: '#6E6E73',
+              blue: '#0066CC',
+              rule: '#D2D2D7'
             }
           },
           fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'sans-serif']
           }
         }
       }
@@ -47,95 +47,78 @@
   </script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" />
 </head>
-<body class="min-h-screen flex flex-col bg-[#000000] text-white font-sans antialiased selection:bg-[#FF5A00] selection:text-black overflow-x-hidden">
+<body class="min-h-screen flex flex-col bg-[#F5F5F7] text-[#1D1D1F] font-sans antialiased overflow-x-hidden">
   <!-- Skip Navigation Link -->
-  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FF5A00] focus:text-black focus:font-mono focus:text-xs focus:font-bold focus:uppercase">
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#1D1D1F] focus:text-[#FFFFFF] focus:font-medium focus:text-sm">
     Skip to content
   </a>
 
-  <!-- Spatial Grid Backdrop -->
-  <div aria-hidden="true" class="fixed inset-0 pointer-events-none z-0 bg-spatial-grid bg-radial-mask"></div>
-
-  <!-- Top Sticky Glassmorphic Navigation -->
-  <header class="sticky top-0 z-50 glass-nav">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between gap-4">
-      <!-- Brand Identity -->
-      <a href="{{ url_for('portfolio.index') }}" class="group flex items-center gap-3 focus:outline-none">
-        <span class="w-8 h-8 flex items-center justify-center border border-white/15 bg-white/[0.03] group-hover:border-[#FF5A00] group-hover:bg-[#FF5A00]/10 transition-colors">
-          <span class="font-mono text-xs font-bold text-[#FF5A00]">&gt;_</span>
-        </span>
-        <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-2.5">
-          <span class="font-black uppercase tracking-[-0.04em] text-sm sm:text-base text-white group-hover:text-[#FF5A00] transition-colors">
-            {{ profile.name }}
-          </span>
-          <span class="hidden md:inline-block font-mono text-[11px] font-semibold tracking-[0.14em] text-[#FF5A00]">
-            // SYS.ENG
-          </span>
-        </div>
+  <!-- Apple-Inspired Minimalist Top Navigation -->
+  <header class="apple-nav">
+    <div class="max-w-6xl mx-auto px-6 sm:px-10 h-16 flex items-center justify-between gap-6">
+      <a href="{{ url_for('portfolio.index') }}" class="text-base font-semibold tracking-[-0.025em] text-[#1D1D1F] hover:text-[#0066CC] transition-colors">
+        {{ profile.name }}
       </a>
 
-      <!-- Technical Monospace Navigation -->
-      <nav aria-label="Main navigation" class="flex items-center gap-1 sm:gap-2">
+      <nav aria-label="Main navigation" class="flex items-center gap-6 sm:gap-9 text-sm">
         <a href="{{ url_for('portfolio.projects') }}"
-           class="px-3 py-2 text-xs font-mono uppercase tracking-[0.08em] transition-all border {% if request.path.startswith('/projects') %}border-[#FF5A00]/60 bg-[#FF5A00]/10 text-white{% else %}border-transparent text-zinc-400 hover:text-white hover:border-white/10 hover:bg-white/[0.03]{% endif %}">
-          <span class="text-[#FF5A00] mr-1">01.</span>Projects
+           class="font-medium transition-colors {% if request.path.startswith('/projects') %}text-[#1D1D1F]{% else %}text-[#6E6E73] hover:text-[#0066CC]{% endif %}">
+          Projects
         </a>
         <a href="{{ url_for('portfolio.about') }}"
-           class="px-3 py-2 text-xs font-mono uppercase tracking-[0.08em] transition-all border {% if request.path == '/about' %}border-[#FF5A00]/60 bg-[#FF5A00]/10 text-white{% else %}border-transparent text-zinc-400 hover:text-white hover:border-white/10 hover:bg-white/[0.03]{% endif %}">
-          <span class="text-[#FF5A00] mr-1">02.</span>About
+           class="font-medium transition-colors {% if request.path == '/about' %}text-[#1D1D1F]{% else %}text-[#6E6E73] hover:text-[#0066CC]{% endif %}">
+          About
         </a>
         <a href="{{ url_for('portfolio.contact') }}"
-           class="px-3 py-2 text-xs font-mono uppercase tracking-[0.08em] transition-all border {% if request.path == '/contact' %}border-[#FF5A00]/60 bg-[#FF5A00]/10 text-white{% else %}border-transparent text-zinc-400 hover:text-white hover:border-white/10 hover:bg-white/[0.03]{% endif %}">
-          <span class="text-[#FF5A00] mr-1">03.</span>Contact
+           class="font-medium transition-colors {% if request.path == '/contact' %}text-[#1D1D1F]{% else %}text-[#6E6E73] hover:text-[#0066CC]{% endif %}">
+          Contact
         </a>
-
-        <a href="mailto:{{ profile.email }}"
-           data-magnetic
-           class="hidden sm:inline-flex ml-2 px-4 py-2 text-xs btn-orange">
-          <span>Hire / Email</span>
-          <span aria-hidden="true" class="arrow-icon">↗</span>
+        <a href="mailto:{{ profile.email }}" class="hidden sm:inline-flex apple-link text-sm">
+          <span>Email</span>
+          <span aria-hidden="true" class="arrow-shift">↗</span>
         </a>
       </nav>
     </div>
   </header>
 
-  <!-- Smooth Scroll Content Container -->
+  <!-- Lenis Smooth Scroll Wrapper -->
   <div id="lenis-wrapper" class="relative z-10 flex-1 flex flex-col">
-    <main id="main-content" class="flex-1 max-w-6xl w-full mx-auto px-5 sm:px-8 lg:px-12 py-16 sm:py-24">
-      {% block content %}{% endblock %}
-    </main>
+    <div id="lenis-content" class="flex-1 flex flex-col">
+      <main id="main-content" class="flex-1 max-w-6xl w-full mx-auto px-6 sm:px-10">
+        {% block content %}{% endblock %}
+      </main>
 
-    <!-- Industrial Telemetry Footer -->
-    <footer class="border-t border-white/10 bg-black/80 backdrop-blur-md py-12 mt-20">
-      <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div class="space-y-1.5">
-          <div class="flex items-center gap-2.5">
-            <span class="w-2 h-2 rounded-full bg-[#FF5A00] animate-pulse"></span>
-            <span class="font-mono text-xs uppercase tracking-[0.14em] text-white font-semibold">
-              {{ profile.name }} // {{ profile.role }}
-            </span>
+      <!-- Apple-Inspired Minimalist Footer -->
+      <footer class="border-t border-[#D2D2D7] bg-[#FFFFFF] py-20 sm:py-24 mt-32">
+        <div class="max-w-6xl mx-auto px-6 sm:px-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
+          <div class="space-y-2">
+            <p class="text-2xl sm:text-3xl font-bold tracking-[-0.04em] text-[#1D1D1F]">
+              {{ profile.name }}
+            </p>
+            <p class="text-sm text-[#6E6E73]">
+              {{ profile.role }} · {{ profile.education }}
+            </p>
           </div>
-          <p class="font-mono text-xs text-zinc-500">
-            {{ profile.education }} · <span id="telemetry-clock" class="text-zinc-400">SGT // UTC+8</span>
-          </p>
-        </div>
 
-        <div class="flex flex-wrap items-center gap-6 font-mono text-xs uppercase tracking-[0.1em]">
-          <a href="mailto:{{ profile.email }}" class="link-snappy text-zinc-400 hover:text-[#FF5A00] transition-colors">
-            [ Email <span class="arrow-icon">↗</span> ]
-          </a>
-          <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" class="link-snappy text-zinc-400 hover:text-[#FF5A00] transition-colors">
-            [ GitHub <span class="arrow-icon">↗</span> ]
-          </a>
-          <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="link-snappy text-zinc-400 hover:text-[#FF5A00] transition-colors">
-            [ LinkedIn <span class="arrow-icon">↗</span> ]
-          </a>
+          <div class="flex flex-wrap items-center gap-8 text-sm">
+            <a href="mailto:{{ profile.email }}" class="apple-link">
+              <span>{{ profile.email }}</span>
+            </a>
+            <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer" class="apple-muted-link">
+              <span>GitHub</span>
+              <span aria-hidden="true" class="arrow-shift">↗</span>
+            </a>
+            <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer" class="apple-muted-link">
+              <span>LinkedIn</span>
+              <span aria-hidden="true" class="arrow-shift">↗</span>
+            </a>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </div>
   </div>
 
-  <!-- 3D, Smooth Scroll (Lenis) & Framer Motion DOM Runtime -->
+  <!-- 3D (Three.js), Smooth Scroll (Lenis) & Framer Motion DOM Runtime -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js" defer></script>

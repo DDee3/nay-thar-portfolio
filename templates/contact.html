@@ -1,82 +1,53 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section aria-labelledby="contact-page-heading" class="space-y-16">
-  <!-- Header -->
-  <header class="pb-12 border-b border-white/10">
-    <div class="font-mono text-xs uppercase tracking-[0.2em] text-[#FF5A00] font-semibold mb-4 flex items-center gap-2.5" data-hero-reveal>
-      <span class="w-2 h-2 bg-[#FF5A00]"></span>
-      <span>DIRECT_CHANNEL // TRANSMISSION</span>
-    </div>
-    <h1 id="contact-page-heading" class="text-5xl sm:text-7xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]" data-hero-reveal>
-      INITIATE <span class="text-[#FF5A00]">CONTACT.</span>
+<section aria-labelledby="contact-page-heading" class="py-24 sm:py-36 space-y-24">
+  <!-- Center-Aligned Apple Editorial Header -->
+  <header class="max-w-3xl mx-auto text-center space-y-6">
+    <p class="text-sm font-semibold text-[#6E6E73]" data-hero-reveal>
+      Direct Correspondence
+    </p>
+    <h1 id="contact-page-heading" class="apple-display tracking-[-0.04em]" data-hero-reveal>
+      Get in touch.
     </h1>
-    <p class="mt-6 max-w-2xl text-base sm:text-lg text-zinc-300 leading-relaxed" data-hero-reveal>
-      Looking for a Python backend or AI integration developer? Send me an email directly.
+    <p class="apple-lead max-w-xl mx-auto" data-hero-reveal>
+      Looking for a Python backend or AI integration engineer? Send me an email directly.
     </p>
 
-    <!-- Single Primary CTA -->
-    <div class="mt-8" data-hero-reveal>
-      <a href="mailto:{{ profile.email }}"
-         data-magnetic
-         class="px-8 py-4 text-xs sm:text-sm btn-orange">
+    <div class="pt-2" data-hero-reveal>
+      <a href="mailto:{{ profile.email }}" class="btn-apple-primary">
         <span>Email {{ profile.email }}</span>
-        <span aria-hidden="true" class="arrow-icon">↗</span>
       </a>
     </div>
   </header>
 
-  <!-- Email, GitHub, LinkedIn Bento Cards -->
-  <div data-scroll-section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Minimalist Contact Rows -->
+  <div data-scroll-section class="max-w-3xl mx-auto border-t border-[#D2D2D7]">
     <a href="mailto:{{ profile.email }}"
-       data-tilt-card data-scroll-item
-       class="group bento-card p-8 flex flex-col justify-between">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <div class="flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
-        <span>01 // EMAIL</span>
-        <span class="text-[#FF5A00] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">↗</span>
-      </div>
-      <div class="mt-10">
-        <span class="block text-xs font-mono uppercase text-[#FF5A00] mb-1">Primary Inbox</span>
-        <span class="block text-lg font-bold text-white group-hover:text-[#FF5A00] transition-colors break-all">
-          {{ profile.email }}
-        </span>
-      </div>
+       data-scroll-item
+       class="group flex flex-col sm:flex-row sm:items-baseline justify-between py-8 border-b border-[#D2D2D7] gap-2">
+      <span class="text-sm font-medium text-[#6E6E73]">Email</span>
+      <span class="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-[#1D1D1F] group-hover:text-[#0066CC] transition-colors">
+        {{ profile.email }} <span aria-hidden="true" class="arrow-shift text-lg">↗</span>
+      </span>
     </a>
 
     <a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer"
-       data-tilt-card data-scroll-item
-       class="group bento-card p-8 flex flex-col justify-between">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <div class="flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
-        <span>02 // GITHUB</span>
-        <span class="text-[#FF5A00] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">↗</span>
-      </div>
-      <div class="mt-10">
-        <span class="block text-xs font-mono uppercase text-[#FF5A00] mb-1">Source Code</span>
-        <span class="block text-lg font-bold text-white group-hover:text-[#FF5A00] transition-colors">
-          github.com/DDee3 ↗
-        </span>
-      </div>
+       data-scroll-item
+       class="group flex flex-col sm:flex-row sm:items-baseline justify-between py-8 border-b border-[#D2D2D7] gap-2">
+      <span class="text-sm font-medium text-[#6E6E73]">GitHub</span>
+      <span class="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-[#1D1D1F] group-hover:text-[#0066CC] transition-colors">
+        github.com/DDee3 <span aria-hidden="true" class="arrow-shift text-lg">↗</span>
+      </span>
     </a>
 
     <a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer"
-       data-tilt-card data-scroll-item
-       class="group bento-card p-8 flex flex-col justify-between">
-      <span class="corner-tick-tl" aria-hidden="true"></span>
-      <span class="corner-tick-br" aria-hidden="true"></span>
-      <div class="flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] text-zinc-400">
-        <span>03 // LINKEDIN</span>
-        <span class="text-[#FF5A00] group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">↗</span>
-      </div>
-      <div class="mt-10">
-        <span class="block text-xs font-mono uppercase text-[#FF5A00] mb-1">Network</span>
-        <span class="block text-lg font-bold text-white group-hover:text-[#FF5A00] transition-colors">
-          linkedin.com/in/nay-thar-htet-73b5702ba ↗
-        </span>
-      </div>
+       data-scroll-item
+       class="group flex flex-col sm:flex-row sm:items-baseline justify-between py-8 border-b border-[#D2D2D7] gap-2">
+      <span class="text-sm font-medium text-[#6E6E73]">LinkedIn</span>
+      <span class="text-2xl sm:text-3xl font-bold tracking-[-0.03em] text-[#1D1D1F] group-hover:text-[#0066CC] transition-colors">
+        linkedin.com/in/nay-thar-htet-73b5702ba <span aria-hidden="true" class="arrow-shift text-lg">↗</span>
+      </span>
     </a>
   </div>
 </section>

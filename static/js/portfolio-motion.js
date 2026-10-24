@@ -1,17 +1,19 @@
 /**
- * NAY THAR HTET — SPATIAL 3D, LENIS SMOOTH SCROLL & FRAMER MOTION ENGINE
+ * NAY THAR HTET — APPLE-INSPIRED MINIMALIST EDITORIAL MOTION & 3D ENGINE
  * Implements:
- * 1. Lenis Smooth Scrolling wrapper & anchor intercept
- * 2. Three.js 3D Floating Wireframe Construct (with 2D 3D-math fallback)
- * 3. Staggered Hero Text Reveal & Scroll-Triggered Section Animations (Framer Motion DOM / WAAPI)
- * 4. 3D Perspective Tilt + Radial Orange Glow on Project & Bento Cards
- * 5. Snappy Magnetic Button Micro-interactions
+ * 1. Smooth Lenis Scrolling across the document
+ * 2. Slow, Gentle, Continuous 3D Floating Abstract Glass Shape + Clean Isometric Grid
+ *    in the Hero background (Three.js WebGL + 2D Canvas fallback)
+ * 3. Framer Motion for Elegant, Slow Fade-Up Reveals on Load & Scroll
+ * 4. Editorial Category Filter for the Stacked Project Showcase
  */
 
 (function () {
   'use strict';
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const APPLE_EASE_ARRAY = [0.16, 1, 0.3, 1];
+  const APPLE_EASE_CSS = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
   /* ==========================================================================
      1. LENIS SMOOTH SCROLLING
@@ -22,77 +24,78 @@
     if (prefersReducedMotion) return;
 
     if (typeof window.Lenis !== 'undefined') {
-      lenisInstance = new window.Lenis({
-        duration: 1.15,
-        easing: function (t) {
-          return Math.min(1, 1.001 - Math.pow(2, -10 * t));
-        },
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        touchMultiplier: 1.5,
-      });
-
-      function raf(time) {
-        lenisInstance.raf(time);
-        requestAnimationFrame(raf);
-      }
-      requestAnimationFrame(raf);
-
-      // Smooth anchor scrolling
-      document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-        anchor.addEventListener('click', function (e) {
-          const targetId = anchor.getAttribute('href');
-          if (!targetId || targetId === '#') return;
-          const targetEl = document.querySelector(targetId);
-          if (targetEl) {
-            e.preventDefault();
-            lenisInstance.scrollTo(targetEl, { offset: -80 });
-          }
+      try {
+        lenisInstance = new window.Lenis({
+          duration: 1.2,
+          easing: function (t) {
+            return Math.min(1, 1.001 - Math.pow(2, -10 * t));
+          },
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 0.92,
+          touchMultiplier: 1.5,
         });
-      });
+
+        function raf(time) {
+          lenisInstance.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+          anchor.addEventListener('click', function (e) {
+            const targetId = anchor.getAttribute('href');
+            if (!targetId || targetId === '#') return;
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+              e.preventDefault();
+              lenisInstance.scrollTo(targetEl, { offset: -72 });
+            }
+          });
+        });
+      } catch (err) {
+        // Fallback to native browser scroll
+      }
     }
   }
 
   /* ==========================================================================
-     2. HERO 3D FLOATING WIREFRAME GEOMETRY (LaunchKit Spatial Style)
+     2. SLOW, GENTLE, CONTINUOUS 3D FLOATING ABSTRACT GLASS SHAPE & ISOMETRIC GRID
+        Designed for Apple Light Gray (#F5F5F7) Ground — Soothing & Subtle
      ========================================================================== */
-  function initHero3D() {
+  function initHeroApple3D() {
     const canvas = document.getElementById('hero-3d-canvas');
     if (!canvas) return;
 
-    const coordReadout = document.getElementById('telemetry-coords');
     let mouseX = 0;
     let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
+    let smoothMouseX = 0;
+    let smoothMouseY = 0;
 
     window.addEventListener(
       'mousemove',
       function (e) {
         mouseX = (e.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-        if (coordReadout) {
-          const rx = (mouseX * 45).toFixed(1);
-          const ry = (mouseY * 45).toFixed(1);
-          coordReadout.textContent = 'VEC[' + rx + '°, ' + ry + '°]';
-        }
       },
       { passive: true }
     );
 
-    // Use Three.js WebGL if available
     if (typeof window.THREE !== 'undefined') {
       try {
         const THREE = window.THREE;
         const scene = new THREE.Scene();
 
-        const width = canvas.parentElement.clientWidth || window.innerWidth;
-        const height = canvas.parentElement.clientHeight || 640;
+        const getWidth = function () {
+          return (canvas.parentElement && canvas.parentElement.clientWidth) || window.innerWidth;
+        };
+        const getHeight = function () {
+          return (canvas.parentElement && canvas.parentElement.clientHeight) || 720;
+        };
 
-        const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-        camera.position.z = 6.5;
+        const camera = new THREE.PerspectiveCamera(36, getWidth() / getHeight(), 0.1, 100);
+        camera.position.set(0, 0, 9.2);
 
         const renderer = new THREE.WebGLRenderer({
           canvas: canvas,
@@ -100,290 +103,375 @@
           antialias: true,
           powerPreference: 'high-performance',
         });
-        renderer.setSize(width, height);
+        renderer.setSize(getWidth(), getHeight());
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
-        const mainGroup = new THREE.Group();
-        // Position slightly right on desktop so it balances the massive hero typography
-        function updateGroupOffset() {
-          const w = canvas.parentElement.clientWidth || window.innerWidth;
-          mainGroup.position.x = w >= 1024 ? 1.55 : 0;
-          mainGroup.position.y = w >= 1024 ? 0.1 : 0.2;
+        // Apple Studio Lighting Rig for #F5F5F7
+        const ambientLight = new THREE.AmbientLight(0xf5f5f7, 0.96);
+        scene.add(ambientLight);
+
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.05);
+        keyLight.position.set(4.0, 6.5, 6.0);
+        scene.add(keyLight);
+
+        const subtleBlueRim = new THREE.DirectionalLight(0x0066cc, 0.28);
+        subtleBlueRim.position.set(-5.0, -3.5, 3.0);
+        scene.add(subtleBlueRim);
+
+        const softFillLight = new THREE.PointLight(0xe5e5ea, 0.75, 20);
+        softFillLight.position.set(3.0, -3.0, 4.5);
+        scene.add(softFillLight);
+
+        const rootGroup = new THREE.Group();
+        scene.add(rootGroup);
+
+        // --- A. SOFT FLOATING ABSTRACT GLASS SHAPE (Centered behind Hero Typography) ---
+        const glassGroup = new THREE.Group();
+        rootGroup.add(glassGroup);
+
+        const sphereGeo = new THREE.SphereGeometry(2.05, 64, 64);
+        const posAttr = sphereGeo.attributes.position;
+        const vertexCount = posAttr.count;
+        const basePositions = new Float32Array(vertexCount * 3);
+
+        for (let i = 0; i < vertexCount; i++) {
+          basePositions[i * 3] = posAttr.getX(i);
+          basePositions[i * 3 + 1] = posAttr.getY(i);
+          basePositions[i * 3 + 2] = posAttr.getZ(i);
         }
-        updateGroupOffset();
-        scene.add(mainGroup);
 
-        // 1. Outer Wireframe Geodesic Icosahedron (Crisp White subtle cage)
-        const outerGeo = new THREE.IcosahedronGeometry(2.15, 1);
-        const outerEdges = new THREE.EdgesGeometry(outerGeo);
-        const outerMat = new THREE.LineBasicMaterial({
-          color: 0xffffff,
+        const glassMaterial =
+          typeof THREE.MeshPhysicalMaterial === 'function'
+            ? new THREE.MeshPhysicalMaterial({
+                color: 0xeaeaef,
+                roughness: 0.15,
+                metalness: 0.02,
+                clearcoat: 0.9,
+                clearcoatRoughness: 0.1,
+                reflectivity: 0.75,
+                transparent: true,
+                opacity: 0.68,
+              })
+            : new THREE.MeshPhongMaterial({
+                color: 0xeaeaef,
+                specular: 0xffffff,
+                shininess: 95,
+                transparent: true,
+                opacity: 0.68,
+              });
+
+        const glassSculpture = new THREE.Mesh(sphereGeo, glassMaterial);
+        glassGroup.add(glassSculpture);
+
+        // Delicate Orbital Glass Ring
+        const ringGeo = new THREE.TorusGeometry(2.82, 0.012, 20, 140);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0xc7c7cc,
           transparent: true,
-          opacity: 0.22,
+          opacity: 0.42,
         });
-        const outerWireframe = new THREE.LineSegments(outerEdges, outerMat);
-        mainGroup.add(outerWireframe);
+        const orbitalRing = new THREE.Mesh(ringGeo, ringMat);
+        orbitalRing.rotation.x = 1.18;
+        orbitalRing.rotation.y = -0.22;
+        glassGroup.add(orbitalRing);
 
-        // 2. Inner Core Octahedron Wireframe (Vibrant Orange #FF5A00)
-        const innerGeo = new THREE.OctahedronGeometry(1.22, 0);
-        const innerEdges = new THREE.EdgesGeometry(innerGeo);
-        const innerMat = new THREE.LineBasicMaterial({
-          color: 0xff5a00,
-          transparent: true,
-          opacity: 0.88,
-        });
-        const innerWireframe = new THREE.LineSegments(innerEdges, innerMat);
-        mainGroup.add(innerWireframe);
+        // --- B. SUBTLE ARCHITECTURAL ISOMETRIC PLANE IN LOWER FIELD ---
+        const isoGridGroup = new THREE.Group();
+        isoGridGroup.position.set(0, -2.15, -1.6);
+        isoGridGroup.rotation.x = -1.12;
+        rootGroup.add(isoGridGroup);
 
-        // 3. Inner Nested Wireframe Lattice
-        const midGeo = new THREE.IcosahedronGeometry(1.55, 0);
-        const midEdges = new THREE.EdgesGeometry(midGeo);
-        const midMat = new THREE.LineBasicMaterial({
-          color: 0xff5a00,
-          transparent: true,
-          opacity: 0.32,
-        });
-        const midWireframe = new THREE.LineSegments(midEdges, midMat);
-        mainGroup.add(midWireframe);
+        const GRID_COLS = 18;
+        const GRID_ROWS = 10;
+        const GRID_SPACING = 0.75;
+        const gridVerts = new Float32Array(GRID_COLS * GRID_ROWS * 3);
+        const gridIndices = [];
 
-        // 4. Orbital Telemetry Ring 1 (Orange)
-        const ringGeo1 = new THREE.RingGeometry(2.58, 2.6, 64);
-        const ringMat1 = new THREE.MeshBasicMaterial({
-          color: 0xff5a00,
-          side: THREE.DoubleSide,
-          transparent: true,
-          opacity: 0.35,
-        });
-        const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
-        ring1.rotation.x = Math.PI / 2.6;
-        ring1.rotation.y = Math.PI / 6;
-        mainGroup.add(ring1);
+        let vIdx = 0;
+        for (let r = 0; r < GRID_ROWS; r++) {
+          for (let c = 0; c < GRID_COLS; c++) {
+            gridVerts[vIdx * 3] = (c - (GRID_COLS - 1) / 2) * GRID_SPACING;
+            gridVerts[vIdx * 3 + 1] = (r - (GRID_ROWS - 1) / 2) * GRID_SPACING;
+            gridVerts[vIdx * 3 + 2] = 0;
 
-        // 5. Orbital Telemetry Ring 2 (White)
-        const ringGeo2 = new THREE.RingGeometry(2.92, 2.935, 64);
-        const ringMat2 = new THREE.MeshBasicMaterial({
-          color: 0xffffff,
-          side: THREE.DoubleSide,
-          transparent: true,
-          opacity: 0.12,
-        });
-        const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
-        ring2.rotation.x = -Math.PI / 3;
-        ring2.rotation.y = -Math.PI / 5;
-        mainGroup.add(ring2);
-
-        // 6. Spatial Vertex Nodes (Points at outer icosahedron vertices)
-        const ptsMat = new THREE.PointsMaterial({
-          color: 0xff5a00,
-          size: 0.065,
-          transparent: true,
-          opacity: 0.9,
-        });
-        const vertexPoints = new THREE.Points(outerGeo, ptsMat);
-        mainGroup.add(vertexPoints);
-
-        let clock = 0;
-        function animate3D() {
-          if (!prefersReducedMotion) {
-            requestAnimationFrame(animate3D);
+            const curr = r * GRID_COLS + c;
+            if (c < GRID_COLS - 1) gridIndices.push(curr, curr + 1);
+            if (r < GRID_ROWS - 1) gridIndices.push(curr, curr + GRID_COLS);
+            vIdx++;
           }
-          clock += 0.0065;
+        }
 
-          targetX += (mouseX - targetX) * 0.05;
-          targetY += (mouseY - targetY) * 0.05;
+        const gridGeo = new THREE.BufferGeometry();
+        gridGeo.setAttribute('position', new THREE.BufferAttribute(gridVerts, 3));
+        gridGeo.setIndex(gridIndices);
 
-          const scrollY = window.scrollY || 0;
-          const scrollFactor = scrollY * 0.0012;
+        const gridMat = new THREE.LineBasicMaterial({
+          color: 0xd2d2d7,
+          transparent: true,
+          opacity: 0.36,
+        });
+        const isoLines = new THREE.LineSegments(gridGeo, gridMat);
+        isoGridGroup.add(isoLines);
 
-          outerWireframe.rotation.y = clock * 0.55 + targetX * 0.5 + scrollFactor;
-          outerWireframe.rotation.x = clock * 0.32 - targetY * 0.4 + scrollFactor * 0.5;
+        let time = 0;
 
-          vertexPoints.rotation.copy(outerWireframe.rotation);
+        function updateSculpture(t) {
+          for (let i = 0; i < vertexCount; i++) {
+            const bx = basePositions[i * 3];
+            const by = basePositions[i * 3 + 1];
+            const bz = basePositions[i * 3 + 2];
 
-          innerWireframe.rotation.y = -clock * 0.95 + targetX * 0.8;
-          innerWireframe.rotation.x = -clock * 0.65 + targetY * 0.6;
-          innerWireframe.rotation.z = clock * 0.4;
+            const len = Math.sqrt(bx * bx + by * by + bz * bz) || 1;
+            const nx = bx / len;
+            const ny = by / len;
+            const nz = bz / len;
 
-          midWireframe.rotation.y = clock * 0.35 - targetX * 0.3;
-          midWireframe.rotation.z = -clock * 0.45;
+            const w1 = Math.sin(nx * 1.65 + t * 0.85) * Math.cos(ny * 1.45 + t * 0.65);
+            const w2 = Math.sin(ny * 1.95 - t * 0.55) * Math.cos(nz * 1.75 + t * 0.5);
+            const disp = 1 + (w1 * 0.065 + w2 * 0.045);
 
-          ring1.rotation.z = clock * 0.5;
-          ring2.rotation.z = -clock * 0.35;
+            posAttr.setXYZ(i, bx * disp, by * disp, bz * disp);
+          }
+          posAttr.needsUpdate = true;
+          sphereGeo.computeVertexNormals();
 
-          // Subtle floating bob
-          mainGroup.position.y = (window.innerWidth >= 1024 ? 0.05 : 0.15) + Math.sin(clock * 1.6) * 0.12;
+          // Gentle wave across the subtle isometric architectural plane
+          const gPos = gridGeo.attributes.position;
+          let gCursor = 0;
+          for (let r = 0; r < GRID_ROWS; r++) {
+            for (let c = 0; c < GRID_COLS; c++) {
+              const gx = gPos.getX(gCursor);
+              const gy = gPos.getY(gCursor);
+              const gz = Math.sin(gx * 0.45 + t * 0.9) * 0.14 + Math.cos(gy * 0.5 + t * 0.7) * 0.12;
+              gPos.setZ(gCursor, gz);
+              gCursor++;
+            }
+          }
+          gPos.needsUpdate = true;
+        }
+
+        function renderScene() {
+          if (!prefersReducedMotion) {
+            requestAnimationFrame(renderScene);
+          }
+
+          // Slow, continuous, meditative time step
+          time += 0.0055;
+
+          smoothMouseX += (mouseX - smoothMouseX) * 0.02;
+          smoothMouseY += (mouseY - smoothMouseY) * 0.02;
+
+          updateSculpture(time);
+
+          glassGroup.rotation.y = time * 0.12 + smoothMouseX * 0.18;
+          glassGroup.rotation.x = Math.sin(time * 0.22) * 0.08 - smoothMouseY * 0.14;
+          glassGroup.position.y = Math.sin(time * 0.42) * 0.1;
+
+          orbitalRing.rotation.z = time * 0.08;
 
           renderer.render(scene, camera);
         }
 
-        animate3D();
+        renderScene();
 
         window.addEventListener(
           'resize',
           function () {
-            const newW = canvas.parentElement.clientWidth || window.innerWidth;
-            const newH = canvas.parentElement.clientHeight || 640;
-            camera.aspect = newW / newH;
+            const w = getWidth();
+            const h = getHeight();
+            camera.aspect = w / h;
             camera.updateProjectionMatrix();
-            renderer.setSize(newW, newH);
-            updateGroupOffset();
+            renderer.setSize(w, h);
+            if (prefersReducedMotion) {
+              renderer.render(scene, camera);
+            }
           },
           { passive: true }
         );
         return;
       } catch (err) {
-        // Fall through to 2D Canvas 3D-Math Wireframe Engine
+        // Fall through to 2D Canvas organic glass shape fallback
       }
     }
 
-    // Fallback 2D Canvas 3D-Projection Wireframe Renderer
-    initCanvas3DFallback(canvas);
+    initCanvasAppleGlassFallback(canvas, function () {
+      return { mouseX: mouseX, mouseY: mouseY };
+    });
   }
 
-  function initCanvas3DFallback(canvas) {
+  function initCanvasAppleGlassFallback(canvas, getMouse) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     function resize() {
-      canvas.width = canvas.parentElement.clientWidth || window.innerWidth;
-      canvas.height = canvas.parentElement.clientHeight || 640;
+      canvas.width = (canvas.parentElement && canvas.parentElement.clientWidth) || window.innerWidth;
+      canvas.height = (canvas.parentElement && canvas.parentElement.clientHeight) || 680;
     }
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const phi = (1 + Math.sqrt(5)) / 2;
-    const rawVerts = [
-      [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-      [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-      [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1],
-    ];
-    const edges = [
-      [0, 11], [0, 5], [0, 1], [0, 7], [0, 10],
-      [1, 5], [5, 11], [11, 10], [10, 7], [7, 1],
-      [3, 9], [3, 4], [3, 2], [3, 6], [3, 8],
-      [4, 9], [2, 4], [6, 2], [8, 6], [9, 8],
-      [4, 5], [2, 11], [6, 10], [8, 7], [9, 1],
-      [4, 11], [2, 10], [6, 7], [8, 1], [9, 5],
-    ];
+    let t = 0;
+    let sx = 0;
+    let sy = 0;
 
-    let angle = 0;
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      angle += 0.006;
-      const cx = canvas.width >= 1024 ? canvas.width * 0.72 : canvas.width * 0.5;
-      const cy = canvas.height * 0.48;
-      const scale = Math.min(canvas.width, canvas.height) * 0.22;
+      t += 0.005;
 
-      const projected = rawVerts.map(function (v) {
-        let x = v[0], y = v[1], z = v[2];
-        // Rotate Y
-        let x1 = x * Math.cos(angle) - z * Math.sin(angle);
-        let z1 = x * Math.sin(angle) + z * Math.cos(angle);
-        // Rotate X
-        let y2 = y * Math.cos(angle * 0.6) - z1 * Math.sin(angle * 0.6);
-        let z2 = y * Math.sin(angle * 0.6) + z1 * Math.cos(angle * 0.6);
-        const perspective = 4 / (4 - z2 * 0.35);
-        return [cx + x1 * scale * perspective, cy + y2 * scale * perspective];
-      });
+      const m = getMouse();
+      sx += (m.mouseX - sx) * 0.02;
+      sy += (m.mouseY - sy) * 0.02;
 
-      ctx.strokeStyle = 'rgba(255, 90, 0, 0.45)';
-      ctx.lineWidth = 1;
-      edges.forEach(function (e) {
-        const p1 = projected[e[0]];
-        const p2 = projected[e[1]];
+      const cx = canvas.width * 0.5 + sx * 16;
+      const cy = canvas.height * 0.48 - sy * 12 + Math.sin(t * 0.5) * 6;
+      const baseR = Math.min(canvas.width, canvas.height) * 0.27;
+
+      const layers = [
+        { scale: 1.0, fill: 'rgba(232, 232, 237, 0.62)', phase: 0 },
+        { scale: 0.78, fill: 'rgba(255, 255, 255, 0.55)', phase: 1.4 },
+      ];
+
+      layers.forEach(function (layer) {
         ctx.beginPath();
-        ctx.moveTo(p1[0], p1[1]);
-        ctx.lineTo(p2[0], p2[1]);
-        ctx.stroke();
-      });
-
-      projected.forEach(function (p) {
-        ctx.fillStyle = '#FF5A00';
-        ctx.fillRect(p[0] - 2, p[1] - 2, 4, 4);
+        const steps = 72;
+        for (let i = 0; i <= steps; i++) {
+          const angle = (i / steps) * Math.PI * 2;
+          const morph =
+            Math.sin(angle * 3 + t + layer.phase) * 0.04 +
+            Math.cos(angle * 2 - t * 0.75 + layer.phase) * 0.03;
+          const r = baseR * layer.scale * (1 + morph);
+          const px = cx + Math.cos(angle) * r;
+          const py = cy + Math.sin(angle) * r;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fillStyle = layer.fill;
+        ctx.fill();
       });
 
       if (!prefersReducedMotion) {
         requestAnimationFrame(draw);
       }
     }
+
     draw();
   }
 
   /* ==========================================================================
-     3. STAGGERED HERO REVEAL & SCROLL-TRIGGERED SECTION ANIMATIONS
+     3. FRAMER MOTION ELEGANT, SLOW FADE-UP REVEALS ON LOAD & SCROLL
      ========================================================================== */
-  function initScrollAndHeroAnimations() {
-    const heroWords = document.querySelectorAll('[data-hero-reveal]');
-    const scrollSections = document.querySelectorAll('[data-scroll-section]');
-
+  function initFramerMotionReveals() {
     if (prefersReducedMotion) return;
 
-    const hasMotion = typeof window.Motion !== 'undefined' && typeof window.Motion.animate === 'function';
+    const heroItems = document.querySelectorAll('[data-hero-reveal]');
+    const scrollSections = document.querySelectorAll('[data-scroll-section]');
 
-    // 3A. Staggered Hero Text & Element Reveal
-    if (heroWords.length > 0) {
-      if (hasMotion) {
-        heroWords.forEach(function (el) {
-          el.style.opacity = '0';
-          el.style.transform = 'translateY(32px)';
-        });
-        window.Motion.animate(
-          heroWords,
-          { opacity: [0, 1], y: [32, 0] },
-          {
-            duration: 0.75,
-            delay: window.Motion.stagger ? window.Motion.stagger(0.075) : 0.08,
-            easing: [0.16, 1, 0.3, 1],
+    const motionLib = window.Motion || window.FramerMotion || null;
+    const hasMotionAnimate = motionLib && typeof motionLib.animate === 'function';
+
+    // 3A. Elegant Slow Fade-Up on Page Load
+    if (heroItems.length > 0) {
+      heroItems.forEach(function (el, idx) {
+        if (hasMotionAnimate) {
+          try {
+            motionLib.animate(
+              el,
+              { opacity: [0, 1], transform: ['translateY(22px)', 'translateY(0px)'] },
+              { duration: 0.95, delay: 0.08 + idx * 0.09, easing: APPLE_EASE_ARRAY }
+            );
+            return;
+          } catch (e) {
+            // Fall through to WAAPI
           }
-        );
-      } else {
-        heroWords.forEach(function (el, idx) {
+        }
+        if (typeof el.animate === 'function') {
           el.animate(
             [
-              { opacity: 0, transform: 'translateY(32px)' },
+              { opacity: 0, transform: 'translateY(22px)' },
               { opacity: 1, transform: 'translateY(0px)' },
             ],
             {
-              duration: 750,
-              delay: idx * 75,
-              easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              duration: 950,
+              delay: 80 + idx * 90,
+              easing: APPLE_EASE_CSS,
               fill: 'both',
             }
           );
-        });
-      }
+        }
+      });
     }
 
-    // 3B. Scroll-Triggered Fade-In & Slide-Up for Every Section & Bento Card
+    // 3B. Elegant Slow Fade-Up Reveals as the User Scrolls Down
     if (scrollSections.length > 0) {
-      if (hasMotion && typeof window.Motion.inView === 'function') {
-        scrollSections.forEach(function (section) {
-          const items = section.querySelectorAll('[data-scroll-item]');
-          section.style.opacity = '0';
-          section.style.transform = 'translateY(36px)';
+      const revealSection = function (section) {
+        if (section.dataset.revealed === 'true') return;
+        section.dataset.revealed = 'true';
 
-          window.Motion.inView(
+        if (hasMotionAnimate) {
+          try {
+            motionLib.animate(
+              section,
+              { opacity: [0, 1], transform: ['translateY(28px)', 'translateY(0px)'] },
+              { duration: 0.95, easing: APPLE_EASE_ARRAY }
+            );
+          } catch (e) {
+            section.style.opacity = '1';
+            section.style.transform = 'none';
+          }
+        } else if (typeof section.animate === 'function') {
+          section.animate(
+            [
+              { opacity: 0, transform: 'translateY(28px)' },
+              { opacity: 1, transform: 'translateY(0px)' },
+            ],
+            {
+              duration: 950,
+              easing: APPLE_EASE_CSS,
+              fill: 'forwards',
+            }
+          );
+        }
+
+        const items = section.querySelectorAll('[data-scroll-item]');
+        items.forEach(function (item, idx) {
+          if (hasMotionAnimate) {
+            try {
+              motionLib.animate(
+                item,
+                { opacity: [0, 1], transform: ['translateY(26px)', 'translateY(0px)'] },
+                { duration: 0.9, delay: 0.08 + idx * 0.1, easing: APPLE_EASE_ARRAY }
+              );
+              return;
+            } catch (e) {
+              // Fall through to WAAPI
+            }
+          }
+          if (typeof item.animate === 'function') {
+            item.animate(
+              [
+                { opacity: 0, transform: 'translateY(26px)' },
+                { opacity: 1, transform: 'translateY(0px)' },
+              ],
+              {
+                duration: 900,
+                delay: 80 + idx * 100,
+                easing: APPLE_EASE_CSS,
+                fill: 'forwards',
+              }
+            );
+          }
+        });
+      };
+
+      if (motionLib && typeof motionLib.inView === 'function') {
+        scrollSections.forEach(function (section) {
+          motionLib.inView(
             section,
             function () {
-              window.Motion.animate(
-                section,
-                { opacity: [0, 1], y: [36, 0] },
-                { duration: 0.72, easing: [0.16, 1, 0.3, 1] }
-              );
-
-              if (items.length > 0) {
-                window.Motion.animate(
-                  items,
-                  { opacity: [0, 1], y: [28, 0] },
-                  {
-                    duration: 0.68,
-                    delay: window.Motion.stagger ? window.Motion.stagger(0.085, { start: 0.1 }) : 0.1,
-                    easing: [0.16, 1, 0.3, 1],
-                  }
-                );
-              }
+              revealSection(section);
             },
-            { amount: 0.12 }
+            { amount: 0.08 }
           );
         });
       } else if ('IntersectionObserver' in window) {
@@ -391,40 +479,12 @@
           function (entries, obs) {
             entries.forEach(function (entry) {
               if (entry.isIntersecting) {
-                const section = entry.target;
-                section.animate(
-                  [
-                    { opacity: 0, transform: 'translateY(36px)' },
-                    { opacity: 1, transform: 'translateY(0px)' },
-                  ],
-                  {
-                    duration: 720,
-                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                    fill: 'forwards',
-                  }
-                );
-
-                const items = section.querySelectorAll('[data-scroll-item]');
-                items.forEach(function (item, idx) {
-                  item.animate(
-                    [
-                      { opacity: 0, transform: 'translateY(28px)' },
-                      { opacity: 1, transform: 'translateY(0px)' },
-                    ],
-                    {
-                      duration: 680,
-                      delay: 90 + idx * 85,
-                      easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                      fill: 'forwards',
-                    }
-                  );
-                });
-
-                obs.unobserve(section);
+                revealSection(entry.target);
+                obs.unobserve(entry.target);
               }
             });
           },
-          { threshold: 0.1 }
+          { threshold: 0.08, rootMargin: '0px 0px -6% 0px' }
         );
 
         scrollSections.forEach(function (sec) {
@@ -435,89 +495,45 @@
   }
 
   /* ==========================================================================
-     4. 3D TILT EFFECT + GLOWING ORANGE SPOTLIGHT ON PROJECT / BENTO CARDS
+     4. EDITORIAL CATEGORY FILTER FOR STACKED PROJECT SECTIONS
      ========================================================================== */
-  function initTiltCards() {
-    const cards = document.querySelectorAll('[data-tilt-card]');
-    if (!cards.length) return;
+  function initProjectFilter() {
+    const filterButtons = document.querySelectorAll('[data-project-filter]');
+    const projectItems = document.querySelectorAll('[data-project-tags]');
 
-    cards.forEach(function (card) {
-      const maxTilt = parseFloat(card.getAttribute('data-max-tilt')) || 5.5;
+    if (!filterButtons.length || !projectItems.length) return;
 
-      card.addEventListener('mousemove', function (e) {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+    filterButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const filter = btn.getAttribute('data-project-filter') || 'all';
 
-        // Update CSS spotlight coordinates
-        card.style.setProperty('--mouse-x', x + 'px');
-        card.style.setProperty('--mouse-y', y + 'px');
+        filterButtons.forEach(function (b) {
+          const active = b.getAttribute('data-project-filter') === filter;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
 
-        if (prefersReducedMotion) return;
+        projectItems.forEach(function (item) {
+          const tags = (item.getAttribute('data-project-tags') || '').split(/\s+/);
+          const matches = filter === 'all' || tags.indexOf(filter) !== -1;
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -maxTilt;
-        const rotateY = ((x - centerX) / centerX) * maxTilt;
-
-        card.style.transition = 'border-color 0.25s ease, box-shadow 0.25s ease, transform 0.08s ease-out';
-        card.style.transform =
-          'perspective(1100px) rotateX(' +
-          rotateX.toFixed(2) +
-          'deg) rotateY(' +
-          rotateY.toFixed(2) +
-          'deg) scale3d(1.012, 1.012, 1.012)';
-      });
-
-      card.addEventListener('mouseleave', function () {
-        if (prefersReducedMotion) return;
-        card.style.transition =
-          'border-color 0.35s ease, box-shadow 0.35s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)';
-        card.style.transform = 'perspective(1100px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+          if (matches) {
+            item.style.display = '';
+            if (!prefersReducedMotion && typeof item.animate === 'function') {
+              item.animate(
+                [
+                  { opacity: 0, transform: 'translateY(16px)' },
+                  { opacity: 1, transform: 'translateY(0px)' },
+                ],
+                { duration: 480, easing: APPLE_EASE_CSS }
+              );
+            }
+          } else {
+            item.style.display = 'none';
+          }
+        });
       });
     });
-  }
-
-  /* ==========================================================================
-     5. SNAPPY MAGNETIC BUTTON MICRO-INTERACTIONS
-     ========================================================================== */
-  function initMagneticButtons() {
-    if (prefersReducedMotion) return;
-    const buttons = document.querySelectorAll('[data-magnetic]');
-    buttons.forEach(function (btn) {
-      btn.addEventListener('mousemove', function (e) {
-        const rect = btn.getBoundingClientRect();
-        const dx = e.clientX - (rect.left + rect.width / 2);
-        const dy = e.clientY - (rect.top + rect.height / 2);
-        btn.style.transform = 'translate3d(' + (dx * 0.16).toFixed(1) + 'px, ' + (dy * 0.2 - 2).toFixed(1) + 'px, 0) scale(1.02)';
-      });
-
-      btn.addEventListener('mouseleave', function () {
-        btn.style.transform = '';
-      });
-    });
-  }
-
-  /* ==========================================================================
-     6. LIVE TELEMETRY CLOCK IN FOOTER / HEADER
-     ========================================================================== */
-  function initTelemetryClock() {
-    const clockEl = document.getElementById('telemetry-clock');
-    if (!clockEl) return;
-
-    function updateClock() {
-      const now = new Date();
-      const sgt = new Intl.DateTimeFormat('en-GB', {
-        timeZone: 'Asia/Singapore',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      }).format(now);
-      clockEl.textContent = 'SGT ' + sgt + ' // UTC+8';
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
   }
 
   /* ==========================================================================
@@ -525,11 +541,9 @@
      ========================================================================== */
   function boot() {
     initLenis();
-    initHero3D();
-    initScrollAndHeroAnimations();
-    initTiltCards();
-    initMagneticButtons();
-    initTelemetryClock();
+    initHeroApple3D();
+    initFramerMotionReveals();
+    initProjectFilter();
   }
 
   if (document.readyState === 'loading') {
@@ -538,4 +552,3 @@
     boot();
   }
 })();
-
